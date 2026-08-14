@@ -23,4 +23,5 @@
     * Feel free to tell me about any unintended behavior in the future-game-design thread. Don't hesitate to ping me (@blitzashspear) and I'll try my best to fix it.
 
 * Did you use AI when making this?
-    * fuh nah.
+    * I used Copilot's autocomplete features.
+    * Besides that, fuh nah.
