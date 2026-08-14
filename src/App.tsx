@@ -1,12 +1,15 @@
 import React from "react";
 import "./App.css";
-import { ConnectToAP } from "./components/ConnectToAP";
+import { ConnectToAP, APTextClient } from "./components/ConnectToAP";
+import { NPuzzle } from "./components/NPuzzle";
 
 function App(): JSX.Element {
     return (
         <div className="App">
             <h1>n-Puzzle Archipelago</h1>
             <ConnectToAP />
+            <APTextClient />
+            <NPuzzle />
         </div>
     );
 }
@@ -14,7 +17,7 @@ function App(): JSX.Element {
 export default App;
 
 // TODO (Client)
-// 2. Make client show a text field on the right side.
+// 2. Make AP server text reflect on right side.
 // 3. Add puzzle. Mouse clicks, and arrow keys should both work.
 // 4. Make starting puzzle reflects ap gen.
 // 5. Make puzzle send checks.

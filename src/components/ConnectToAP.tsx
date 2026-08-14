@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
 import { Client } from "archipelago.js";
 
+const client = new Client();
+client.messages.on("message", (content) => {
+    console.log(content);
+});
+
 export function ConnectToAP(): JSX.Element {
-    const client = new Client();
-    client.messages.on("message", (content) => {
-        console.log(content);
-    });
     const [host, setHost] = useState("");
     const [port, setPort] = useState("");
     const [player, setPlayer] = useState("");
@@ -37,7 +38,7 @@ export function ConnectToAP(): JSX.Element {
     }
 
     return (
-        <div>
+        <div className="ConnectToAP">
             <InputGroup className="mb-1 InputAPConnect">
                 <InputGroup.Text>Host</InputGroup.Text>
                 <Form.Control
@@ -75,7 +76,7 @@ export function ConnectToAP(): JSX.Element {
                     onChange={(e) => setPassword(e.target.value)}
                 />
             </InputGroup>
-            <Button className="ButtonAPConnect" onClick={() => {
+            <Button className="ButtonAP" onClick={() => {
                 if (!isConnected) {
                     connectToAP(host, port, player, password);
                 }
@@ -87,5 +88,34 @@ export function ConnectToAP(): JSX.Element {
             </div>
         </div>
 
+    );
+}
+
+export function APTextClient(): JSX.Element {
+    const [text, setText] = useState("");
+
+    async function sendMessage() {
+        if (text !== "") {
+            await client.messages.say(text)
+                .catch((error) => {
+                    console.error("Failed to send message. You're probably not connected to Archipelago.", error);
+                });
+            setText("");
+        }
+    }
+
+    return (
+        <div className="APTextClient">
+            <InputGroup className="mb-1">
+                <Form.Control
+                    placeholder=""
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                />
+            </InputGroup>
+            <Button className="ButtonAP" onClick={sendMessage}>
+                SEND
+            </Button>
+        </div>
     );
 }
