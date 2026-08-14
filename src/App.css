@@ -1,0 +1,42 @@
+html {
+    overscroll-behavior: none;
+    text-align: center;
+}
+
+body {
+    background: radial-gradient(#292524, black);
+    background-attachment: fixed;
+    color: white;
+    font-family: Verdana;
+    display: inline-block;
+}
+
+h1 {
+    margin: 20px;
+    font-weight: bold;
+}
+
+.ButtonAPConnect {
+    color: black;
+    border: 3px solid black;
+    background-color: darkgray;
+    margin: 5px;
+}
+
+.ButtonAPConnect:focus,
+.ButtonAPConnect:hover {
+    color: white;
+    border: 3px solid white;
+    background-color: dimgray;
+    box-shadow: none;
+}
+
+.form-control:focus {
+    border: transparent;
+    box-shadow: none;
+    background-color: lightgray;
+}
+
+.InputAPConnect {
+    width: 500px;
+}
