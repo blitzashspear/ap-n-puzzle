@@ -31,8 +31,8 @@ export function ConnectToAP(): JSX.Element {
                 setConnectMessage("Connected to Archipelago!");
                 setIsConnected(true);
             })
-            .catch((error) => {
-                setConnectMessage("Failed to connect to Archipelago.");
+            .catch(() => {
+                setConnectMessage("Failed to connect to Archipelago:");
                 setIsConnected(false);
             });
     }
