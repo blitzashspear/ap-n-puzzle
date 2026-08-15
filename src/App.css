@@ -48,5 +48,13 @@ h1 {
     position: absolute;
     bottom: 10px;
     right: 10px;
+}
+
+.APTextClientText {
+    text-align: left;
+    display: block;
+}
+
+.APTextClientInteractives {
     display: flex;
 }

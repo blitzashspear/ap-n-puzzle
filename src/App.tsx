@@ -17,10 +17,13 @@ function App(): JSX.Element {
 export default App;
 
 // TODO (Client)
-// 2. Make AP server text reflect on right side.
-// 3. Add puzzle. Mouse clicks, and arrow keys should both work.
-// 4. Make starting puzzle reflects ap gen.
-// 5. Make puzzle send checks.
-// 6. Make puzzle save state in between sessions (datastorage?)
-// 7. Get rid of memory leaks from useState.
-// 8. Change logo of site.
+// Make pressing connect again stop the first attempt at connecting.
+// Make Connected text disappear when client is not connected anymore.
+// Make AP server text update automatically instead of only when i type.
+// Restrict width of AP server text.
+// Add puzzle. Mouse clicks, and arrow keys should both work.
+// Make starting puzzle reflects ap gen.
+// Make puzzle send checks.
+// Make puzzle save state in between sessions (datastorage?)
+// Get rid of memory leaks from useState.
+// Change logo of site (shuffled ap logo 8puzzle).

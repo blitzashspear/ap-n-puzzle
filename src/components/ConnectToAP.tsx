@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
 import { Client } from "archipelago.js";
 
 const client = new Client();
+let clientMessages: string[] = [];
 client.messages.on("message", (content) => {
     console.log(content);
+    clientMessages = [...clientMessages, content];
 });
 
 export function ConnectToAP(): JSX.Element {
@@ -31,8 +33,9 @@ export function ConnectToAP(): JSX.Element {
                 setConnectMessage("Connected to Archipelago!");
                 setIsConnected(true);
             })
-            .catch(() => {
-                setConnectMessage("Failed to connect to Archipelago:");
+            .catch((error) => {
+                setConnectMessage("Failed to connect to Archipelago.");
+                console.error(error);
                 setIsConnected(false);
             });
     }
@@ -93,12 +96,15 @@ export function ConnectToAP(): JSX.Element {
 
 export function APTextClient(): JSX.Element {
     const [text, setText] = useState("");
+    const [errText, setErrText] = useState("");
 
     async function sendMessage() {
+        setErrText("");
         if (text !== "") {
             await client.messages.say(text)
                 .catch((error) => {
-                    console.error("Failed to send message. You're probably not connected to Archipelago.", error);
+                    setErrText("Disconnected from Archipelago.");
+                    console.error(error);
                 });
             setText("");
         }
@@ -106,16 +112,29 @@ export function APTextClient(): JSX.Element {
 
     return (
         <div className="APTextClient">
-            <InputGroup className="mb-1">
-                <Form.Control
-                    placeholder=""
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                />
-            </InputGroup>
-            <Button className="ButtonAP" onClick={sendMessage}>
-                SEND
-            </Button>
+            <div className="APTextClientText">
+                {errText}
+                {clientMessages.map(message => {
+                    { return <InputGroup.Text>{message}</InputGroup.Text>; }
+                })}
+            </div>
+            <div className="APTextClientInteractives">
+                <InputGroup className="mb-1">
+                    <Form.Control
+                        placeholder=""
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === "Enter") {
+                                sendMessage();
+                            }
+                        }}
+                    />
+                </InputGroup>
+                <Button className="ButtonAP" onClick={sendMessage}>
+                    SEND
+                </Button>
+            </div>
         </div>
     );
 }
