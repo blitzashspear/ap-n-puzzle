@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
-import { ConnectToAP, APTextClient } from "./components/Client";
+import { ConnectToAP } from "./components/ConnectToAP";
+import { APTextClient } from "./components/APTextClient";
 import { NPuzzle } from "./components/NPuzzle";
 
 function App(): JSX.Element {
