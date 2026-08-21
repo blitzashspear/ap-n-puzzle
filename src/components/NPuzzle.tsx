@@ -1,9 +1,9 @@
 import React from "react";
-import { client } from "./ConnectToAP";
+// import { client } from "./ConnectToAP";
 
-function generatePuzzle() {
-    return;
-}
+// function generatePuzzle() {
+//     return;
+// }
 
 export function NPuzzle(): JSX.Element {
     return (

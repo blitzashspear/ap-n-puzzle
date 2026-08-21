@@ -24,5 +24,6 @@ export default App;
 // Make starting puzzle reflect ap gen.
 // Make puzzle send checks.
 // Make puzzle save state in between sessions (datastorage?)
+// Make puzzle send goal packet to AP when complete.
 // Get rid of memory leaks from useState.
 // Change logo of site (shuffled ap logo 8puzzle).
