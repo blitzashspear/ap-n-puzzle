@@ -19,8 +19,6 @@ export default App;
 // TODO (Client)
 // Make pressing connect again stop the first attempt at connecting.
 // Make Connected text disappear when client is not connected anymore.
-// Make AP server text update automatically instead of only when i type.
-// Restrict width of AP server text.
 // Add puzzle. Mouse clicks, and arrow keys should both work.
 // Make starting puzzle reflect ap gen.
 // Make puzzle send checks.
