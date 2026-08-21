@@ -7,22 +7,41 @@ OPTION_TO_SIZE = {
     1: 16,
     2: 25,
     3: 36
+    # 4: 49,
+    # 5: 64,
+    # 6: 81,
+    # 7: 100
 }
 
-LOCATION_IDS = {}
 max_puzzle_size = max(OPTION_TO_SIZE.values())
-for i in range(1, max_puzzle_size):
-    LOCATION_IDS[f"{i}'s Position"] = i
-for i in range(1, max_puzzle_size):
-    LOCATION_IDS[f"{i} Total Position{"s" if i > 1 else ""}"] = i+1000
-LOCATION_IDS["Starting Number"] = 10000
 
+def item_name(x: int):
+    return str(x)
+
+def position_name(x: int):
+    return f"{x}'s Position"
+
+def total_position_name(x: int):
+    return f"{i} Total Position{"s" if i > 1 else ""}"
+
+LOCATION_IDS = {}
 ITEM_IDS = {}
-for i in range(1, max_puzzle_size):
-    ITEM_IDS[str(i)]
+ITEM_GROUPS = {
+    "number": set(),
+    "emoticon": set()
+}
+for i in range(1, 36):
+    LOCATION_IDS[position_name(i)] = i
+    LOCATION_IDS[total_position_name(i)] = i+101
+    ITEM_IDS[item_name(i)] = i
+    ITEM_GROUPS["number"].add(item_name(i))
+LOCATION_IDS["Starting Number"] = 999
+
 silly_emoticons = [":)", ":(", ">:(", ":3", ":D", "D:", "8)", ":))", "XD", ":P", ":|", ":')"]
 for i, silly_emoticon in enumerate(silly_emoticons):
-    ITEM_IDS[silly_emoticon] = 9000+i
+    ITEM_IDS[silly_emoticon] = 100+i
+    ITEM_GROUPS["emoticon"][silly_emoticon]
+ITEM_IDS["Solved Puzzle"] = 999
 
 class NPuzzleWebWorld(WebWorld):
     game = "n-Puzzle"
@@ -56,6 +75,7 @@ class NPuzzleWorld(World):
     options: NPuzzleOptions
     location_name_to_id = LOCATION_IDS
     item_name_to_id = ITEM_IDS
+    item_name_groups = ITEM_GROUPS
     origin_region_name = "Game Board"
 
     def create_regions(self) -> None:
@@ -68,29 +88,36 @@ class NPuzzleWorld(World):
         ), NPuzzleLocation)
         for i in range(1, OPTION_TO_SIZE[self.options.n_value]):
             game_board.add_locations(get_location_name_with_id(
-                f"{i}'s Position"
+                position_name(i)
             ), NPuzzleLocation)
             game_board.add_locations(get_location_name_with_id(
-                f"{i} Total Position{"s" if i > 1 else ""}"
+                total_position_name(i)
             ), NPuzzleLocation)
 
         self.multiworld.regions += [game_board]
 
     def set_rules(self) -> None:
-        # TODO
-        self.multiworld.completion_condition[self.player] = lambda state: state.has_all((str(i) for i in range(1, OPTION_TO_SIZE[self.options.n_value])), self.player)
+        for i in range(1, max_puzzle_size):
+            self.set_rule(self.get_location(position_name(i)), lambda state: state.has(item_name(i), self.player))
+            self.set_rule(self.get_location(total_position_name(i)), lambda state: state.has_group_unique("numbers", self.player, i))
+        
+        self.multiworld.completion_condition[self.player] = lambda state: state.has("Solved Puzzle", self.player)
 
     def create_items(self) -> None:
-        starting_item = str(self.random.choice(range(1, OPTION_TO_SIZE[self.options.n_value])))
+        player_size = OPTION_TO_SIZE[self.options.n_value]
+        starting_item = item_name(self.random.choice(range(1, player_size)))
         self.get_location("Starting Number").place_locked_item(self.create_item(starting_item))
-        item_names = [str(i) for i in range(1, OPTION_TO_SIZE[self.options.n_value])]
-        itempool = [self.create_item(item_name) for item_name in item_names]
+        itempool = []
+        for item in [item_name(i) for i in range(1, player_size)]:
+            if item != starting_item:
+                itempool.append(self.create_item(item))
+        self.get_location(total_position_name(max_puzzle_size-1)).place_locked_item(self.create_item("Solved Puzzle"))
         self.multiworld.itempool += itempool
 
     def create_item(self, name: str) -> NPuzzleItem:
         if name not in silly_emoticons:
             return NPuzzleItem(name, ItemClassification.progression, ITEM_IDS[name])
-        return NPuzzleItem(name, ItemClassification.filler)
+        return NPuzzleItem(name, ItemClassification.filler, ITEM_IDS[name])
 
     def get_filler_item_name(self):
         return self.random.choice(silly_emoticons)

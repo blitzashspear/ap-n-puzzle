@@ -19,7 +19,7 @@ export default App;
 // TODO (Client)
 // Make text client a scrollable container.
 // Make pressing connect again stop the first attempt at connecting.
-// Make Connected text disappear when client is not connected anymore.
+// Change states when client gets disconnected.
 // Add puzzle. Mouse clicks, and arrow keys should both work.
 // Make starting puzzle reflect ap gen.
 // Make puzzle send checks.

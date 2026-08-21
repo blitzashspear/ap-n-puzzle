@@ -36,7 +36,7 @@ export function ConnectToAP(): JSX.Element {
             });
     }
 
-    function ConnectButton() {
+    function ConnectButton(): JSX.Element {
         if (isConnected) {
             if (showAPInfo) {
                 return (
