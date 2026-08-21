@@ -22,7 +22,7 @@ export default App;
 // Make AP server text update automatically instead of only when i type.
 // Restrict width of AP server text.
 // Add puzzle. Mouse clicks, and arrow keys should both work.
-// Make starting puzzle reflects ap gen.
+// Make starting puzzle reflect ap gen.
 // Make puzzle send checks.
 // Make puzzle save state in between sessions (datastorage?)
 // Get rid of memory leaks from useState.

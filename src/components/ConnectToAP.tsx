@@ -1,13 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
 import { Client } from "archipelago.js";
 
 const client = new Client();
-let clientMessages: string[] = [];
-client.messages.on("message", (content) => {
-    console.log(content);
-    clientMessages = [...clientMessages, content];
-});
 
 export function ConnectToAP(): JSX.Element {
     const [host, setHost] = useState("");
@@ -97,13 +92,21 @@ export function ConnectToAP(): JSX.Element {
 export function APTextClient(): JSX.Element {
     const [text, setText] = useState("");
     const [errText, setErrText] = useState("");
+    const [messages, setMessages] = useState<string[]>([]);
+
+    useEffect(() => {
+        client.messages.on("message", (content) => {
+            console.log(content);
+            setMessages(prevMessages => [...prevMessages, content]);
+        });
+    }, []);
 
     async function sendMessage() {
         setErrText("");
         if (text !== "") {
             await client.messages.say(text)
                 .catch((error) => {
-                    setErrText("Disconnected from Archipelago.");
+                    setErrText("Not connected to Archipelago.");
                     console.error(error);
                 });
             setText("");
@@ -114,8 +117,14 @@ export function APTextClient(): JSX.Element {
         <div className="APTextClient">
             <div className="APTextClientText">
                 {errText}
-                {clientMessages.map(message => {
-                    { return <InputGroup.Text>{message}</InputGroup.Text>; }
+                {messages.map(message => {
+                    {
+                        return <div
+                            className="APMessage"
+                        >
+                            {message}
+                        </div>;
+                    }
                 })}
             </div>
             <div className="APTextClientInteractives">

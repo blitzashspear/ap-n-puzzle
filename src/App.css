@@ -53,8 +53,15 @@ h1 {
 .APTextClientText {
     text-align: left;
     display: block;
+    width: 400px;
 }
 
 .APTextClientInteractives {
     display: flex;
+}
+
+.APMessage {
+    width: 100%;
+    white-space: pre-wrap;
+    text-align: left;
 }

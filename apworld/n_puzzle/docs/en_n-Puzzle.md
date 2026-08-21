@@ -16,11 +16,8 @@
 
 *Common Questions*
 
-* Can I play this on mobile?
-    * Maybe idfk lol.
-
 * Hey your code sucks and I found a bug.
     * Feel free to tell me about any unintended behavior in the future-game-design thread. Don't hesitate to ping me (@blitzashspear) and I'll try my best to fix it.
 
 * Did you use AI when making this?
-    * I used Copilot's autocompletion feature. That's it.
+    * I used AI for some autocompletion and troubleshooting. It's been a little bit since I've done web development.
