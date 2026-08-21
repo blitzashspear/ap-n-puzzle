@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { ConnectToAP, APTextClient } from "./components/ConnectToAP";
+import { ConnectToAP, APTextClient } from "./components/Client";
 import { NPuzzle } from "./components/NPuzzle";
 
 function App(): JSX.Element {
@@ -15,8 +15,8 @@ function App(): JSX.Element {
 }
 
 export default App;
-
 // TODO (Client)
+// Make text client a scrollable container.
 // Make pressing connect again stop the first attempt at connecting.
 // Make Connected text disappear when client is not connected anymore.
 // Add puzzle. Mouse clicks, and arrow keys should both work.

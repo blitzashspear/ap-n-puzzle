@@ -16,14 +16,17 @@ h1 {
 }
 
 .ConnectToAP {
-    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 
 .ButtonAP {
     color: black;
     border: 3px solid black;
     background-color: darkgray;
-    margin: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
 }
 
 .ButtonAP:focus,
@@ -41,7 +44,7 @@ h1 {
 }
 
 .InputAPConnect {
-    width: 500px;
+    width: 400px;
 }
 
 .APTextClient {

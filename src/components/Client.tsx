@@ -11,6 +11,7 @@ export function ConnectToAP(): JSX.Element {
     const [password, setPassword] = useState("");
     const [connectMessage, setConnectMessage] = useState("");
     const [isConnected, setIsConnected] = useState(false);
+    const [showAPInfo, setShowAPInfo] = useState(true);
 
     function connectToAP(host: string, port: string, player: string, password: string) {
         if (host === "") {
@@ -25,7 +26,7 @@ export function ConnectToAP(): JSX.Element {
         //client.login(host + ":" + port, player, "n-Puzzle", { password: password })
         client.login(host + ":" + port, player, "", { password: password })
             .then(() => {
-                setConnectMessage("Connected to Archipelago!");
+                setConnectMessage("");
                 setIsConnected(true);
             })
             .catch((error) => {
@@ -35,52 +36,78 @@ export function ConnectToAP(): JSX.Element {
             });
     }
 
-    return (
-        <div className="ConnectToAP">
-            <InputGroup className="mb-1 InputAPConnect">
-                <InputGroup.Text>Host</InputGroup.Text>
-                <Form.Control
-                    placeholder="archipelago.gg"
-                    aria-label="Host"
-                    aria-describedby="host"
-                    value={host}
-                    onChange={(e) => setHost(e.target.value)}
-                />
-                <Form.Control
-                    placeholder="38281"
-                    aria-label="Port"
-                    aria-describedby="port"
-                    value={port}
-                    onChange={(e) => setPort(e.target.value)}
-                />
-            </InputGroup>
-            <InputGroup className="mb-1 InputAPConnect">
-                <InputGroup.Text>Player</InputGroup.Text>
-                <Form.Control
-                    placeholder="Player1"
-                    aria-label="Player"
-                    aria-describedby="player"
-                    value={player}
-                    onChange={(e) => setPlayer(e.target.value)}
-                />
-            </InputGroup>
-            <InputGroup className="mb-1 InputAPConnect">
-                <InputGroup.Text>Password</InputGroup.Text>
-                <Form.Control
-                    placeholder=""
-                    aria-label="Password"
-                    aria-describedby="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </InputGroup>
+    function ConnectButton() {
+        if (isConnected) {
+            if (showAPInfo) {
+                return (
+                    <Button className="ButtonAP" onClick={() => {
+                        setShowAPInfo(!showAPInfo);
+                    }}>
+                        HIDE AP INFO
+                    </Button>
+                );
+            } else {
+                return (
+                    <Button className="ButtonAP" onClick={() => {
+                        setShowAPInfo(!showAPInfo);
+                    }}>
+                        SHOW AP INFO
+                    </Button>
+                );
+            }
+        }
+        return (
             <Button className="ButtonAP" onClick={() => {
-                if (!isConnected) {
-                    connectToAP(host, port, player, password);
-                }
+                connectToAP(host, port, player, password);
             }}>
                 CONNECT TO ARCHIPELAGO
             </Button>
+        );
+    }
+
+    return (
+        <div className="ConnectToAP">
+            <div style={{ display: showAPInfo ? "block" : "none" }}>
+                <InputGroup className="mb-1 InputAPConnect">
+                    <InputGroup.Text>Host</InputGroup.Text>
+                    <Form.Control
+                        placeholder="archipelago.gg"
+                        aria-label="Host"
+                        aria-describedby="host"
+                        value={host}
+                        onChange={(e) => setHost(e.target.value)}
+                    />
+                    <Form.Control
+                        placeholder="38281"
+                        aria-label="Port"
+                        aria-describedby="port"
+                        value={port}
+                        onChange={(e) => setPort(e.target.value)}
+                    />
+                </InputGroup>
+                <InputGroup className="mb-1 InputAPConnect">
+                    <InputGroup.Text>Player</InputGroup.Text>
+                    <Form.Control
+                        placeholder="Player1"
+                        aria-label="Player"
+                        aria-describedby="player"
+                        value={player}
+                        onChange={(e) => setPlayer(e.target.value)}
+                    />
+                </InputGroup>
+                <InputGroup className="mb-1 InputAPConnect">
+                    <InputGroup.Text>Password</InputGroup.Text>
+                    <Form.Control
+                        placeholder=""
+                        aria-label="Password"
+                        aria-describedby="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </InputGroup>
+            </div>
+            <ConnectButton></ConnectButton>
+
             <div>
                 {connectMessage}
             </div>
@@ -98,11 +125,11 @@ export function APTextClient(): JSX.Element {
         client.messages.on("message", (content) => {
             console.log(content);
             setMessages(prevMessages => [...prevMessages, content]);
+            setErrText("");
         });
     }, []);
 
     async function sendMessage() {
-        setErrText("");
         if (text !== "") {
             await client.messages.say(text)
                 .catch((error) => {
@@ -119,9 +146,7 @@ export function APTextClient(): JSX.Element {
                 {errText}
                 {messages.map(message => {
                     {
-                        return <div
-                            className="APMessage"
-                        >
+                        return <div className="APMessage">
                             {message}
                         </div>;
                     }
