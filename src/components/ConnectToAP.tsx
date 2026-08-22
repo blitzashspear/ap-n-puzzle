@@ -75,6 +75,7 @@ export function ConnectToAP(): JSX.Element {
                         aria-label="Host"
                         aria-describedby="host"
                         value={host}
+                        style={{ width: "50%" }}
                         onChange={(e) => setHost(e.target.value)}
                     />
                     <Form.Control

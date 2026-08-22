@@ -69,23 +69,43 @@ h1 {
     text-align: left;
 }
 
-.NPuzzle {
+.NPuzzleContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.PuzzleUI {
     padding: 10px;
     border-radius: 5px;
     justify-content: center;
     align-items: center;
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: repeat(3, 150px);
-    grid-template-rows: repeat(3, 150px);
 }
 
-.NPuzzle div {
+.PuzzleUI div {
     background-color: black;
     border-radius: 5px;
 }
 
-.NPuzzle-8 {
+.Size-9 {
     height: 150px;
     width: 150px;
+}
+
+.Size-16 {
+    height: 120px;
+    width: 120px;
+}
+
+.Size-25 {
+    height: 100px;
+    width: 100px;
+}
+
+.Size-36 {
+    height: 80px;
+    width: 80px;
 }

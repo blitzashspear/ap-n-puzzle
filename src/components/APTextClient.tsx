@@ -30,12 +30,10 @@ export function APTextClient(): JSX.Element {
         <div className="APTextClient">
             <div className="APTextClientText">
                 {errText}
-                {messages.map(message => {
-                    {
-                        return <div className="APMessage">
-                            {message}
-                        </div>;
-                    }
+                {messages.map((message, index) => {
+                    return <div key={index} className="APMessage">
+                        {message}
+                    </div>;
                 })}
             </div>
             <div className="APTextClientInteractives">

@@ -22,8 +22,10 @@ export default App;
 // Change states when client gets disconnected.
 // Add puzzle. Mouse clicks, and arrow keys should both work.
 // Make starting puzzle reflect ap gen.
+// Block puzzle from view.
 // Make puzzle send checks.
 // Make puzzle save state in between sessions (datastorage?)
 // Make puzzle send goal packet to AP when complete.
 // Get rid of memory leaks from useState.
 // Change logo of site (shuffled ap logo 8puzzle).
+// Add button to reset puzzle.
