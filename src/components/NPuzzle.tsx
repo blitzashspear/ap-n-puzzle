@@ -10,7 +10,7 @@ const gridSizes = {
 };
 
 export function NPuzzle(): JSX.Element {
-    const size = 36;
+    const size = 9;
     const puzzle = Array(size).fill(0);
     // const [revealed, setRevealed] = useState<string[]>([]);
     // useEffect(() => {

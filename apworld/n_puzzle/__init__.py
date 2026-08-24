@@ -40,7 +40,7 @@ LOCATION_IDS["Starting Number"] = 999
 silly_emoticons = [":)", ":(", ">:(", ":3", ":D", "D:", "8)", ":))", "XD", ":P", ":|", ":')"]
 for i, silly_emoticon in enumerate(silly_emoticons):
     ITEM_IDS[silly_emoticon] = 100+i
-    ITEM_GROUPS["emoticon"][silly_emoticon]
+    ITEM_GROUPS["emoticon"].add(silly_emoticon)
 ITEM_IDS["Solved Puzzle"] = 999
 
 class NPuzzleWebWorld(WebWorld):
@@ -70,7 +70,7 @@ class NPuzzleWorld(World):
     """
 
     game = "n-Puzzle"
-    web = NPuzzleWebWorld
+    web = NPuzzleWebWorld()
     options_dataclass = NPuzzleOptions
     options: NPuzzleOptions
     location_name_to_id = LOCATION_IDS
@@ -121,3 +121,8 @@ class NPuzzleWorld(World):
 
     def get_filler_item_name(self):
         return self.random.choice(silly_emoticons)
+
+# TODO APWORLD
+# Generate puzzle
+# Check if puzzle is solvable by using inversion algorithm (https://www.geeksforgeeks.org/dsa/check-instance-15-puzzle-solvable/)
+# Pass puzzle to web client, possibly through slot data.
