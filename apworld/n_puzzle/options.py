@@ -1,13 +1,11 @@
 from dataclasses import dataclass
-from Options import PerGameCommonOptions, Choice, Toggle, OptionSet
+from Options import PerGameCommonOptions, Choice
 
-class NValue(Choice):
+class Size(Choice):
     """
-    Pick how big your puzzle will be.
-    8-puzzle: 3x3
-    15-puzzle: 4x4
+    Choose how big you want your puzzle.
     """
-    display_name = "n-Value"
+    display_name = "size"
     default = 0
     option_8 = 0
     option_15 = 1
@@ -16,4 +14,4 @@ class NValue(Choice):
     
 @dataclass
 class NPuzzleOptions(PerGameCommonOptions):
-    n_value: NValue
+    size: Size

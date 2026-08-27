@@ -1,6 +1,7 @@
 from worlds.AutoWorld import World, WebWorld
 from BaseClasses import Tutorial, Region, Location, Item, ItemClassification
 from .options import NPuzzleOptions
+from .puzzle import generate_puzzle
 
 OPTION_TO_SIZE = {
     0: 9,
@@ -86,7 +87,7 @@ class NPuzzleWorld(World):
         game_board.add_locations(get_location_name_with_id(
             "Starting Number"
         ), NPuzzleLocation)
-        for i in range(1, OPTION_TO_SIZE[self.options.n_value]):
+        for i in range(1, OPTION_TO_SIZE[self.options.size]):
             game_board.add_locations(get_location_name_with_id(
                 position_name(i)
             ), NPuzzleLocation)
@@ -104,7 +105,7 @@ class NPuzzleWorld(World):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Solved Puzzle", self.player)
 
     def create_items(self) -> None:
-        player_size = OPTION_TO_SIZE[self.options.n_value]
+        player_size = OPTION_TO_SIZE[self.options.size]
         starting_item = item_name(self.random.choice(range(1, player_size)))
         self.get_location("Starting Number").place_locked_item(self.create_item(starting_item))
         itempool = []
@@ -122,7 +123,8 @@ class NPuzzleWorld(World):
     def get_filler_item_name(self):
         return self.random.choice(silly_emoticons)
 
-# TODO APWORLD
-# Generate puzzle
-# Check if puzzle is solvable by using inversion algorithm (https://www.geeksforgeeks.org/dsa/check-instance-15-puzzle-solvable/)
-# Pass puzzle to web client, possibly through slot data.
+    def fill_slot_data(self):
+        return {
+            "size": self.options.size,
+            "puzzle": generate_puzzle(self)
+        }
