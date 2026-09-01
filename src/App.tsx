@@ -27,8 +27,7 @@ export default App;
 // Make pressing connect again stop the first attempt at connecting.
 // Change states when client gets disconnected.
 // Add disconnect button.
-// Add puzzle. Mouse clicks, and arrow keys should both work.
-// Make starting puzzle reflect ap gen.
+// Implement puzzle arrow keys.
 // Block puzzle squares from view, AP logo will be used to block the number.
 // Make puzzle send checks.
 // Make puzzle save state in between sessions (datastorage?)

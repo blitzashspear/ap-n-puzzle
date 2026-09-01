@@ -3,12 +3,10 @@ import { InputGroup, Button, Form } from "react-bootstrap";
 import { Client } from "archipelago.js";
 import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
 
-export
-
-    type ConnectToAPProps = {
-        client: Client;
-        setSlotData: (slotData: NPuzzleSlotData | null) => void;
-    };
+type ConnectToAPProps = {
+    client: Client;
+    setSlotData: (slotData: NPuzzleSlotData | null) => void;
+};
 
 export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Element {
     const [host, setHost] = useState("");

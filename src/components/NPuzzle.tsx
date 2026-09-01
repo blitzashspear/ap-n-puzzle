@@ -20,17 +20,17 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
         return <></>;
     }
     const size = slotData.size;
-    const dim_size = size / size;
+    const dimSize = Math.sqrt(size);
     const [puzzle, setPuzzle] = useState<number[][]>(slotData.puzzle.map(row => [...row]));
     const initialPuzzle = puzzle.map(row => [...row]);
     const [revealed, setRevealed] = useState<string[]>(["0"]);
     const goalPuzzle: number[][] = [];
     let count = 1;
-    for (let i = 0; i < dim_size; i++) {
+    for (let i = 0; i < dimSize; i++) {
         goalPuzzle.push([]);
 
-        for (let j = 0; j < dim_size; j++) {
-            if (i * dim_size + j === size - 1) {
+        for (let j = 0; j < dimSize; j++) {
+            if (i * dimSize + j === size - 1) {
                 goalPuzzle[i].push(0);
             } else {
                 goalPuzzle[i].push(count++);
@@ -39,22 +39,29 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
     }
 
     useEffect(() => {
-        const allItems = client.items.received.map(item => item.name);
-        const items = allItems.filter(item => /^\d+$/.test(item));
-        setRevealed(items);
+        const handleItemsReceived = () => {
+            const allItems = client.items.received.map(item => item.name);
+            const items = allItems.filter(item => /^\d+$/.test(item));
+            setRevealed(items);
+        };
+        handleItemsReceived();
+        client.items.on("itemsReceived", handleItemsReceived);
     }, [client]);
 
-    function checkPuzzle(board: number[][], goal: number[][]) {
+    function checkPuzzle(board: number[][] = puzzle) {
         let totalSolved = 0;
-        for (let i = 0; i < dim_size; i++) {
-            for (let j = 0; j < dim_size; j++) {
-                if (revealed.includes(board[i][j].toString()) && board[i][j] === goal[i][j]) {
+        for (let i = 0; i < dimSize; i++) {
+            for (let j = 0; j < dimSize; j++) {
+                if (revealed.includes(board[i][j].toString()) && board[i][j] === goalPuzzle[i][j]) {
                     client.check(board[i][j]);
                     totalSolved++;
                 }
             }
         }
         client.check(1000 + totalSolved);
+        if (totalSolved == size - 1) {
+            client.goal();
+        }
     }
 
     function movePuzzle(row: number, col: number) {
@@ -71,8 +78,9 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
                 newPuzzle[row][col] = 0;
             }
         });
-        setPuzzle(newPuzzle);
-        checkPuzzle(puzzle, goalPuzzle);
+        const nextPuzzle = newPuzzle.map(row => [...row]);
+        setPuzzle(nextPuzzle);
+        checkPuzzle(nextPuzzle);
     }
 
     return (
