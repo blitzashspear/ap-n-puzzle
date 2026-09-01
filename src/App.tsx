@@ -28,10 +28,8 @@ export default App;
 // Change states when client gets disconnected.
 // Add disconnect button.
 // Implement puzzle arrow keys.
-// Block puzzle squares from view, AP logo will be used to block the number.
-// Make puzzle send checks.
+// Use AP logo will be used to block the number instead of ?s.
 // Make puzzle save state in between sessions (datastorage?)
-// Make puzzle send goal packet to AP when complete.
 // Get rid of memory leaks from useState.
 // Change logo of site (shuffled ap logo 8puzzle).
-// Add button to reset puzzle.
+// Add my funny deathlink idea.

@@ -22,8 +22,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
     const size = slotData.size;
     const dimSize = Math.sqrt(size);
     const [puzzle, setPuzzle] = useState<number[][]>(slotData.puzzle.map(row => [...row]));
-    const initialPuzzle = puzzle.map(row => [...row]);
-    const [revealed, setRevealed] = useState<string[]>(["0"]);
+    const [revealed, setRevealed] = useState<string[]>([]);
     const goalPuzzle: number[][] = [];
     let count = 1;
     for (let i = 0; i < dimSize; i++) {
@@ -78,9 +77,8 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
                 newPuzzle[row][col] = 0;
             }
         });
-        const nextPuzzle = newPuzzle.map(row => [...row]);
-        setPuzzle(nextPuzzle);
-        checkPuzzle(nextPuzzle);
+        setPuzzle(newPuzzle);
+        checkPuzzle(newPuzzle);
     }
 
     return (
@@ -100,7 +98,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
                     })
                 )}
             </div>
-            <Button className="ButtonAP" onClick={() => setPuzzle(initialPuzzle.map(row => [...row]))}>
+            <Button className="ButtonAP" onClick={() => setPuzzle(slotData.puzzle.map(row => [...row]))}>
                 RESET PUZZLE
             </Button>
         </div>
