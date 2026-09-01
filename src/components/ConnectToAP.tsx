@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
 import { Client } from "archipelago.js";
+import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
 
-const client = new Client();
+export
 
-export function ConnectToAP(): JSX.Element {
+    type ConnectToAPProps = {
+        client: Client;
+        setSlotData: (slotData: NPuzzleSlotData | null) => void;
+    };
+
+export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Element {
     const [host, setHost] = useState("");
     const [port, setPort] = useState("");
     const [player, setPlayer] = useState("");
@@ -13,7 +19,7 @@ export function ConnectToAP(): JSX.Element {
     const [isConnected, setIsConnected] = useState(false);
     const [showAPInfo, setShowAPInfo] = useState(true);
 
-    function connectToAP(host: string, port: string, player: string, password: string) {
+    async function connectToAP(host: string, port: string, player: string, password: string) {
         if (host === "") {
             host = "archipelago.gg";
         }
@@ -23,17 +29,19 @@ export function ConnectToAP(): JSX.Element {
         if (player === "") {
             player = "Player1";
         }
-        //client.login(host + ":" + port, player, "n-Puzzle", { password: password })
-        client.login(host + ":" + port, player, "", { password: password })
-            .then(() => {
-                setConnectMessage("");
-                setIsConnected(true);
-            })
-            .catch((error) => {
-                setConnectMessage("Failed to connect to Archipelago.");
-                console.error(error);
-                setIsConnected(false);
-            });
+        try {
+            const newSlotData = await client.login<NPuzzleSlotData>(host + ":" + port, player, "n-Puzzle", { password });
+            setSlotData(newSlotData);
+            console.log("Connected with Slot Data:", newSlotData);
+            setConnectMessage("");
+            setIsConnected(true);
+            client.check(999); // Starting Number
+        } catch (error) {
+            setSlotData(null);
+            setConnectMessage("Failed to connect to Archipelago.");
+            console.error(error);
+            setIsConnected(false);
+        }
     }
 
     function ConnectButton(): JSX.Element {
@@ -116,5 +124,3 @@ export function ConnectToAP(): JSX.Element {
 
     );
 }
-
-export { client };

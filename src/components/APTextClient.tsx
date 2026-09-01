@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
-import { client } from "./ConnectToAP";
+import { Client } from "archipelago.js";
 
-export function APTextClient(): JSX.Element {
+type APTextClientProps = {
+    client: Client;
+};
+
+export function APTextClient({ client }: APTextClientProps): JSX.Element {
     const [text, setText] = useState("");
     const [errText, setErrText] = useState("");
     const [messages, setMessages] = useState<string[]>([]);
@@ -13,7 +17,7 @@ export function APTextClient(): JSX.Element {
             setMessages(prevMessages => [...prevMessages, content]);
             setErrText("");
         });
-    }, []);
+    }, [client]);
 
     async function sendMessage() {
         if (text !== "") {
@@ -24,6 +28,14 @@ export function APTextClient(): JSX.Element {
                 });
             setText("");
         }
+    }
+
+    function SendButton(): JSX.Element {
+        return (
+            <Button className="ButtonAP" onClick={sendMessage}>
+                SEND
+            </Button>
+        );
     }
 
     return (
@@ -49,9 +61,7 @@ export function APTextClient(): JSX.Element {
                         }}
                     />
                 </InputGroup>
-                <Button className="ButtonAP" onClick={sendMessage}>
-                    SEND
-                </Button>
+                <SendButton></SendButton>
             </div>
         </div>
     );
