@@ -14,7 +14,6 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
     const [player, setPlayer] = useState("");
     const [password, setPassword] = useState("");
     const [connectMessage, setConnectMessage] = useState("");
-    const [isConnected, setIsConnected] = useState(false);
     const [showAPInfo, setShowAPInfo] = useState(true);
 
     async function connectToAP(host: string, port: string, player: string, password: string) {
@@ -32,18 +31,16 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
             setSlotData(newSlotData);
             console.log("Connected with Slot Data:", newSlotData);
             setConnectMessage("");
-            setIsConnected(true);
             client.check(999); // Starting Number
         } catch (error) {
             setSlotData(null);
             setConnectMessage("Failed to connect to Archipelago.");
             console.error(error);
-            setIsConnected(false);
         }
     }
 
     function ConnectButton(): JSX.Element {
-        if (isConnected) {
+        if (client.authenticated) {
             if (showAPInfo) {
                 return (
                     <Button className="ButtonAP" onClick={() => {
@@ -78,16 +75,12 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                     <InputGroup.Text>Host</InputGroup.Text>
                     <Form.Control
                         placeholder="archipelago.gg"
-                        aria-label="Host"
-                        aria-describedby="host"
                         value={host}
                         style={{ width: "50%" }}
                         onChange={(e) => setHost(e.target.value)}
                     />
                     <Form.Control
                         placeholder="38281"
-                        aria-label="Port"
-                        aria-describedby="port"
                         value={port}
                         onChange={(e) => setPort(e.target.value)}
                     />
@@ -96,8 +89,6 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                     <InputGroup.Text>Player</InputGroup.Text>
                     <Form.Control
                         placeholder="Player1"
-                        aria-label="Player"
-                        aria-describedby="player"
                         value={player}
                         onChange={(e) => setPlayer(e.target.value)}
                     />
@@ -106,8 +97,6 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                     <InputGroup.Text>Password</InputGroup.Text>
                     <Form.Control
                         placeholder=""
-                        aria-label="Password"
-                        aria-describedby="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />

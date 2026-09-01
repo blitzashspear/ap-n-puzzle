@@ -43,8 +43,13 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
             const items = allItems.filter(item => /^\d+$/.test(item));
             setRevealed(items);
         };
+
         handleItemsReceived();
         client.items.on("itemsReceived", handleItemsReceived);
+
+        return () => {
+            client.items.off("itemsReceived", handleItemsReceived);
+        };
     }, [client]);
 
     function checkPuzzle(board: number[][] = puzzle) {

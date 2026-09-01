@@ -23,13 +23,12 @@ function App(): JSX.Element {
 
 export default App;
 // TODO (Client)
-// Make text client a scrollable container.
 // Make pressing connect again stop the first attempt at connecting.
 // Change states when client gets disconnected.
 // Add disconnect button.
 // Implement puzzle arrow keys.
-// Use AP logo will be used to block the number instead of ?s.
+// AP logo will be used to block the number instead of ?s.
 // Make puzzle save state in between sessions (datastorage?)
-// Get rid of memory leaks from useState.
 // Change logo of site (shuffled ap logo 8puzzle).
 // Add my funny deathlink idea.
+// When puzzle square is placed correctly and checked, make the background different.

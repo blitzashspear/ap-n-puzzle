@@ -12,11 +12,17 @@ export function APTextClient({ client }: APTextClientProps): JSX.Element {
     const [messages, setMessages] = useState<string[]>([]);
 
     useEffect(() => {
-        client.messages.on("message", (content) => {
+        const handleMessage = (content: string) => {
             console.log(content);
             setMessages(prevMessages => [...prevMessages, content]);
             setErrText("");
-        });
+        };
+
+        client.messages.on("message", handleMessage);
+
+        return () => {
+            client.messages.off("message", handleMessage);
+        };
     }, [client]);
 
     async function sendMessage() {

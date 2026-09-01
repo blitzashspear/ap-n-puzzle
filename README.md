@@ -1,6 +1,6 @@
 # An Archipelago Implementation for the n-Puzzle
 
-Current Status: currently a glorified text client.
+Current Status: MVP. Playable, missing QOL features.
 
 For more information about the randomizer and it's features, see the
 [docs page](apworld/n_puzzle/docs/en_n-Puzzle.md).

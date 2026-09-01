@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Options import PerGameCommonOptions, Choice
+from Options import PerGameCommonOptions, Choice, Toggle
 
 class Size(Choice):
     """
@@ -11,6 +11,11 @@ class Size(Choice):
     option_4x4 = 1
     option_5x5 = 2
     option_6x6 = 3
+
+class NPuzzleDeathLink(Toggle):
+    """When you attempt to move a tile that is not next to a blank tile, everyone who enabled death link dies. When someone else dies, your puzzle is forcibly reset. Currently not implemented."""
+    display_name = "Death Link"
+    default = False
 
 OPTION_TO_SIZE = {
     0: 9,
@@ -25,4 +30,5 @@ OPTION_TO_SIZE = {
 
 @dataclass
 class NPuzzleOptions(PerGameCommonOptions):
+    # death_link: NPuzzleDeathLink
     size: Size
