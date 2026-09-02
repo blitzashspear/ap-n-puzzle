@@ -16,7 +16,7 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
     const [connectMessage, setConnectMessage] = useState("");
     const [showAPInfo, setShowAPInfo] = useState(true);
 
-    async function connectToAP(host: string, port: string, player: string, password: string) {
+    async function connectToSlot(host: string, port: string, player: string, password: string) {
         if (host === "") {
             host = "archipelago.gg";
         }
@@ -56,7 +56,6 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
             return (
                 <Button className="ButtonAP" onClick={() => {
                     client.socket.disconnect();
-                    setSlotData(null);
                 }}>
                     DISCONNECT
                 </Button>
@@ -65,7 +64,7 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
 
         return (
             <Button className="ButtonAP" onClick={() => {
-                connectToAP(host, port, player, password);
+                connectToSlot(host, port, player, password);
             }}>
                 CONNECT TO ARCHIPELAGO
             </Button>

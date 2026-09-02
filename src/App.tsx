@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Client } from "archipelago.js";
 import "./App.css";
 import { ConnectToAP } from "./components/ConnectToAP";
@@ -10,6 +10,18 @@ import { NPuzzleSlotData } from "./types/NPuzzleSlotData";
 function App(): JSX.Element {
     const [client] = useState<Client>(() => new Client());
     const [slotData, setSlotData] = useState<NPuzzleSlotData | null>(null);
+
+    useEffect(() => {
+        const handleDisconnected = () => {
+            setSlotData(null);
+        };
+
+        client.socket.on("disconnected", handleDisconnected);
+
+        return () => {
+            client.socket.off("disconnected", handleDisconnected);
+        };
+    }, [client]);
 
     return (
         <div className="App">
