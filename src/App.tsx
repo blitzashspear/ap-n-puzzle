@@ -24,9 +24,8 @@ function App(): JSX.Element {
 export default App;
 // TODO (Client)
 // Make pressing connect again stop the first attempt at connecting.
-// Change states when client gets disconnected.
-// Add disconnect button.
 // Implement puzzle arrow keys.
+// Make sure the app realizes when its been disconnected not manually.
 // AP logo will be used to block the number instead of ?s.
 // Make puzzle save state in between sessions (datastorage?)
 // Change logo of site (shuffled ap logo 8puzzle).

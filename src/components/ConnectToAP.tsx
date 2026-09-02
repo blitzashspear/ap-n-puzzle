@@ -27,9 +27,7 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
             player = "Player1";
         }
         try {
-            const newSlotData = await client.login<NPuzzleSlotData>(host + ":" + port, player, "n-Puzzle", { password });
-            setSlotData(newSlotData);
-            console.log("Connected with Slot Data:", newSlotData);
+            setSlotData(await client.login<NPuzzleSlotData>(host + ":" + port, player, "n-Puzzle", { password }));
             setConnectMessage("");
             client.check(999); // Starting Number
         } catch (error) {
@@ -39,26 +37,32 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
         }
     }
 
-    function ConnectButton(): JSX.Element {
+    function ShowHideButton(): JSX.Element {
         if (client.authenticated) {
-            if (showAPInfo) {
-                return (
-                    <Button className="ButtonAP" onClick={() => {
-                        setShowAPInfo(!showAPInfo);
-                    }}>
-                        HIDE AP INFO
-                    </Button>
-                );
-            } else {
-                return (
-                    <Button className="ButtonAP" onClick={() => {
-                        setShowAPInfo(!showAPInfo);
-                    }}>
-                        SHOW AP INFO
-                    </Button>
-                );
-            }
+            return (
+                <Button className="ButtonAP" onClick={() => {
+                    setShowAPInfo(!showAPInfo);
+                }}>
+                    {showAPInfo ? "HIDE AP INFO" : "SHOW AP INFO"}
+                </Button>
+            );
         }
+
+        return <></>;
+    }
+
+    function ConnectDisconnectButton(): JSX.Element {
+        if (client.authenticated) {
+            return (
+                <Button className="ButtonAP" onClick={() => {
+                    client.socket.disconnect();
+                    setSlotData(null);
+                }}>
+                    DISCONNECT
+                </Button>
+            );
+        }
+
         return (
             <Button className="ButtonAP" onClick={() => {
                 connectToAP(host, port, player, password);
@@ -102,8 +106,8 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                     />
                 </InputGroup>
             </div>
-            <ConnectButton></ConnectButton>
-
+            <ShowHideButton></ShowHideButton>
+            <ConnectDisconnectButton></ConnectDisconnectButton>
             <div>
                 {connectMessage}
             </div>

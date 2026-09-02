@@ -7,6 +7,9 @@ type APTextClientProps = {
 };
 
 export function APTextClient({ client }: APTextClientProps): JSX.Element {
+    if (!client.authenticated) {
+        return <></>;
+    }
     const [text, setText] = useState("");
     const [errText, setErrText] = useState("");
     const [messages, setMessages] = useState<string[]>([]);
