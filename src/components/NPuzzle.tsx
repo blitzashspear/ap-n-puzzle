@@ -52,6 +52,44 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
         };
     }, [client]);
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            event.preventDefault();
+
+            let emptyRow = -1;
+            let emptyCol = -1;
+            for (let i = 0; i < dimSize; i++) {
+                for (let j = 0; j < dimSize; j++) {
+                    if (puzzle[i][j] === 0) {
+                        emptyRow = i;
+                        emptyCol = j;
+                        break;
+                    }
+                }
+            }
+            switch (event.key) {
+                case "ArrowLeft":
+                    movePuzzle(emptyRow, emptyCol - 1);
+                    break;
+                case "ArrowRight":
+                    movePuzzle(emptyRow, emptyCol + 1);
+                    break;
+                case "ArrowUp":
+                    movePuzzle(emptyRow - 1, emptyCol);
+                    break;
+                case "ArrowDown":
+                    movePuzzle(emptyRow + 1, emptyCol);
+                    break;
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [puzzle, dimSize]);
+
     function checkPuzzle(board: number[][] = puzzle) {
         let totalSolved = 0;
         for (let i = 0; i < dimSize; i++) {

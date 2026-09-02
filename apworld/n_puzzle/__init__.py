@@ -119,5 +119,6 @@ class NPuzzleWorld(World):
     def fill_slot_data(self):
         return {
             "size": OPTION_TO_SIZE[self.options.size],
-            "puzzle": generate_puzzle(self)
+            "puzzle": generate_puzzle(self),
+            "death_link": self.options.death_link
         }

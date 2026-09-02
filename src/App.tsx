@@ -35,8 +35,6 @@ function App(): JSX.Element {
 
 export default App;
 // TODO (Client)
-// Make pressing connect again stop the first attempt at connecting.
-// Implement puzzle arrow keys.
 // AP logo will be used to block the number instead of ?s.
 // Make puzzle save state in between sessions (datastorage?)
 // Change logo of site (shuffled ap logo 8puzzle).
