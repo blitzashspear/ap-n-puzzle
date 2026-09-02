@@ -69,16 +69,24 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
             }
             switch (event.key) {
                 case "ArrowLeft":
-                    movePuzzle(emptyRow, emptyCol - 1);
+                    if (emptyCol < 2) {
+                        movePuzzle(emptyRow, emptyCol + 1);
+                    }
                     break;
                 case "ArrowRight":
-                    movePuzzle(emptyRow, emptyCol + 1);
+                    if (emptyCol > 0) {
+                        movePuzzle(emptyRow, emptyCol - 1);
+                    }
                     break;
                 case "ArrowUp":
-                    movePuzzle(emptyRow - 1, emptyCol);
+                    if (emptyRow < 2) {
+                        movePuzzle(emptyRow + 1, emptyCol);
+                    }
                     break;
                 case "ArrowDown":
-                    movePuzzle(emptyRow + 1, emptyCol);
+                    if (emptyRow > 0) {
+                        movePuzzle(emptyRow - 1, emptyCol);
+                    }
                     break;
             }
         };
