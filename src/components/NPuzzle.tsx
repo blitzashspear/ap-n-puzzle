@@ -54,8 +54,6 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            event.preventDefault();
-
             let emptyRow = -1;
             let emptyCol = -1;
             for (let i = 0; i < dimSize; i++) {

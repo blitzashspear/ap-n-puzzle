@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
 import { Client } from "archipelago.js";
 import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
@@ -80,11 +80,14 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                         placeholder="archipelago.gg"
                         value={host}
                         style={{ width: "50%" }}
+                        disabled={client.authenticated}
                         onChange={(e) => setHost(e.target.value)}
                     />
                     <Form.Control
                         placeholder="38281"
                         value={port}
+                        maxLength={5}
+                        disabled={client.authenticated}
                         onChange={(e) => setPort(e.target.value)}
                     />
                 </InputGroup>
@@ -93,6 +96,7 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                     <Form.Control
                         placeholder="Player1"
                         value={player}
+                        disabled={client.authenticated}
                         onChange={(e) => setPlayer(e.target.value)}
                     />
                 </InputGroup>
@@ -101,6 +105,7 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                     <Form.Control
                         placeholder=""
                         value={password}
+                        disabled={client.authenticated}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </InputGroup>
