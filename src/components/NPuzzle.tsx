@@ -156,7 +156,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
             >
                 {puzzle.map((row, rowIndex) => row.map((value, colIndex) =>
                     <div
-                        key={value}
+                        key={`${rowIndex}-${colIndex}`}
                         className={`Size-${size}`}
                         onClick={() => movePuzzle(rowIndex, colIndex)}
                     >

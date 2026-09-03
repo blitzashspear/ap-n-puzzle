@@ -37,6 +37,7 @@ export default App;
 // TODO (Client)
 // App completly fucking breaks and sends bogus checks when disconnecting and using a different slot.
 //      I think this is due to the puzzle data not being properly reset when reconnecting.
+// Keep track of checked locations so I dont spam the server.
 // Make puzzle save state in between sessions (datastorage?)
 // Change logo of site (shuffled ap logo 8puzzle).
 // Add my funny deathlink idea.

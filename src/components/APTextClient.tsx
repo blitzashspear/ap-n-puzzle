@@ -69,7 +69,7 @@ export function APTextClient({ client }: APTextClientProps): JSX.Element {
                         }}
                     />
                 </InputGroup>
-                <SendButton></SendButton>
+                <SendButton />
             </div>
         </div>
     );

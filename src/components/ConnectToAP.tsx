@@ -110,8 +110,8 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                     />
                 </InputGroup>
             </div>
-            <ShowHideButton></ShowHideButton>
-            <ConnectDisconnectButton></ConnectDisconnectButton>
+            <ShowHideButton />
+            <ConnectDisconnectButton />
             <div>
                 {connectMessage}
             </div>
