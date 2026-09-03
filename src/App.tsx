@@ -36,7 +36,8 @@ function App(): JSX.Element {
 export default App;
 // TODO (Client)
 // App completly fucking breaks and sends bogus checks when disconnecting and using a different slot.
+//      I think this is due to the puzzle data not being properly reset when reconnecting.
 // Make puzzle save state in between sessions (datastorage?)
 // Change logo of site (shuffled ap logo 8puzzle).
 // Add my funny deathlink idea.
-// When puzzle square is placed correctly and checked, make the background different.
+// Make the text yellow-green when the corresponding cell is checked. 
