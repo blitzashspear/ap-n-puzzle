@@ -73,7 +73,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
             }
             switch (event.key) {
                 case "ArrowLeft":
-                    if (emptyCol < 2) {
+                    if (emptyCol < dimSize - 1) {
                         movePuzzle(emptyRow, emptyCol + 1);
                     }
                     break;
@@ -83,7 +83,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
                     }
                     break;
                 case "ArrowUp":
-                    if (emptyRow < 2) {
+                    if (emptyRow < dimSize - 1) {
                         movePuzzle(emptyRow + 1, emptyCol);
                     }
                     break;
@@ -154,7 +154,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
                     gridTemplateRows: gridSizes[size]
                 }}
             >
-                {puzzle.map((row, rowIndex) => row.map((value, colIndex) => (
+                {puzzle.map((row, rowIndex) => row.map((value, colIndex) =>
                     <div
                         key={value}
                         className={`Size-${size}`}
@@ -162,7 +162,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
                     >
                         {cellContent(value)}
                     </div>
-                )))}
+                ))}
             </div>
         );
     }
