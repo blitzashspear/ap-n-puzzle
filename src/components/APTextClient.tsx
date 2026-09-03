@@ -16,7 +16,6 @@ export function APTextClient({ client }: APTextClientProps): JSX.Element {
 
     useEffect(() => {
         const handleMessage = (content: string) => {
-            console.log(content);
             setMessages(prevMessages => [...prevMessages, content]);
             setErrText("");
         };

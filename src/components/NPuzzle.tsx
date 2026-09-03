@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Client } from "archipelago.js";
 import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
+import APIcon from "../images/APIcon.png";
 
 const gridSizes: Record<number, string> = {
     9: "repeat(3, 150px)",
@@ -130,23 +131,40 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
         checkPuzzle(newPuzzle);
     }
 
+    function cellContent(value: number): React.ReactNode {
+        if (value === 0) {
+            return "";
+        } else if (revealed.includes(value.toString())) {
+            return value;
+        }
+        return <img src={APIcon} alt="Unrevealed Cell" className="PuzzleCellImage" />;
+    }
+
+    function PuzzleUI(): JSX.Element {
+        return (
+            <div
+                className="PuzzleUI"
+                style={{
+                    gridTemplateColumns: gridSizes[size],
+                    gridTemplateRows: gridSizes[size]
+                }}
+            >
+                {puzzle.map((row, rowIndex) => row.map((value, colIndex) => (
+                    <div
+                        key={value}
+                        className={`Size-${size}`}
+                        onClick={() => movePuzzle(rowIndex, colIndex)}
+                    >
+                        {cellContent(value)}
+                    </div>
+                )))}
+            </div>
+        );
+    }
+
     return (
         <div className="NPuzzleContainer">
-            <div className="PuzzleUI" style={{ gridTemplateColumns: gridSizes[size], gridTemplateRows: gridSizes[size] }}>
-                {puzzle.map((row, rowIndex) =>
-                    row.map((value, colIndex) => {
-                        return (
-                            <div
-                                key={value}
-                                className={`Size-${size}`}
-                                onClick={() => movePuzzle(rowIndex, colIndex)}
-                            >
-                                {value === 0 ? "" : revealed.includes(value.toString()) ? value : "?"}
-                            </div>
-                        );
-                    })
-                )}
-            </div>
+            <PuzzleUI />
             <Button className="ButtonAP" onClick={() => setPuzzle(slotData.puzzle.map(row => [...row]))}>
                 RESET PUZZLE
             </Button>

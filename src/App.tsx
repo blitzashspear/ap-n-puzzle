@@ -35,7 +35,7 @@ function App(): JSX.Element {
 
 export default App;
 // TODO (Client)
-// AP logo will be used to block the number instead of ?s.
+// App completly fucking breaks and sends bogus checks when disconnecting and using a different slot.
 // Make puzzle save state in between sessions (datastorage?)
 // Change logo of site (shuffled ap logo 8puzzle).
 // Add my funny deathlink idea.
