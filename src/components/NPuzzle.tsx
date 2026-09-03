@@ -145,8 +145,8 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
         return <img src={APIcon} alt="Unrevealed Cell" className="PuzzleCellImage" />;
     }
 
-    function PuzzleUI(): JSX.Element {
-        return (
+    return (
+        <div className="NPuzzleContainer">
             <div
                 className="PuzzleUI"
                 style={{
@@ -164,12 +164,6 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
                     </div>
                 ))}
             </div>
-        );
-    }
-
-    return (
-        <div className="NPuzzleContainer">
-            <PuzzleUI />
             <Button className="ButtonAP" onClick={() => setPuzzle(slotData.puzzle.map(row => [...row]))}>
                 RESET PUZZLE
             </Button>

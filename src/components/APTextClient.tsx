@@ -38,14 +38,6 @@ export function APTextClient({ client }: APTextClientProps): JSX.Element {
         }
     }
 
-    function SendButton(): JSX.Element {
-        return (
-            <Button className="ButtonAP" onClick={sendMessage}>
-                SEND
-            </Button>
-        );
-    }
-
     return (
         <div className="APTextClient">
             <div className="APTextClientText">
@@ -69,7 +61,9 @@ export function APTextClient({ client }: APTextClientProps): JSX.Element {
                         }}
                     />
                 </InputGroup>
-                <SendButton />
+                <Button className="ButtonAP" onClick={sendMessage}>
+                    SEND
+                </Button>
             </div>
         </div>
     );
