@@ -16,18 +16,23 @@ type NPuzzleProps = {
     slotData: NPuzzleSlotData | null;
 };
 
+type NPuzzleBoardProps = {
+    client: Client;
+    slotData: NPuzzleSlotData;
+};
+
 export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
     if (!client.authenticated || !slotData) {
         return <></>;
     }
+    return <NPuzzleBoard client={client} slotData={slotData} />;
+}
+
+function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     const size = slotData.size;
     const dimSize = Math.sqrt(size);
     const [puzzle, setPuzzle] = useState<number[][]>(slotData.puzzle.map(row => [...row]));
-    const [revealed, setRevealed] = useState<string[]>(() =>
-        client.items.received
-            .map(item => item.name)
-            .filter(item => /^\d+$/.test(item))
-    );
+    const [revealed, setRevealed] = useState<string[]>([]);
     const goalPuzzle: number[][] = [];
     let count = 1;
     for (let i = 0; i < dimSize; i++) {
@@ -47,7 +52,6 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
             const allItems = client.items.received.map(item => item.name);
             const items = allItems.filter(item => /^\d+$/.test(item));
             setRevealed(items);
-            checkPuzzle(puzzle);
         };
 
         handleItemsReceived();
@@ -57,6 +61,10 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
             client.items.off("itemsReceived", handleItemsReceived);
         };
     }, [client]);
+
+    useEffect(() => {
+        checkPuzzle(puzzle);
+    }, [puzzle, revealed]);
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
@@ -133,7 +141,6 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
             }
         });
         setPuzzle(newPuzzle);
-        checkPuzzle(newPuzzle);
     }
 
     function cellContent(value: number): React.ReactNode {
