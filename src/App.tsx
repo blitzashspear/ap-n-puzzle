@@ -40,4 +40,4 @@ export default App;
 // Make puzzle save state in between sessions (datastorage?)
 // Change logo of site (shuffled ap logo 8puzzle).
 // Add my funny deathlink idea.
-// Make the text yellow-green when the corresponding cell is checked. 
+// Hide chat button, colored chat.
