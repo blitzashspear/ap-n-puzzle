@@ -33,6 +33,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     const dimSize = Math.sqrt(size);
     const [puzzle, setPuzzle] = useState<number[][]>(slotData.puzzle.map(row => [...row]));
     const [revealed, setRevealed] = useState<string[]>([]);
+    const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
     const goalPuzzle: number[][] = [];
     let count = 1;
     for (let i = 0; i < dimSize; i++) {
@@ -53,12 +54,17 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
             const items = allItems.filter(item => /^\d+$/.test(item));
             setRevealed(items);
         };
+        const handleLocationsChecked = () => {
+            setCheckedLocations(client.room.checkedLocations);
+        };
 
         handleItemsReceived();
         client.items.on("itemsReceived", handleItemsReceived);
+        client.room.on("locationsChecked", handleLocationsChecked);
 
         return () => {
             client.items.off("itemsReceived", handleItemsReceived);
+            client.room.off("locationsChecked", handleLocationsChecked);
         };
     }, [client]);
 
@@ -166,6 +172,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
                         key={`${rowIndex}-${colIndex}`}
                         className={`Size-${size}`}
                         onClick={() => movePuzzle(rowIndex, colIndex)}
+                        style={{ color: checkedLocations.includes(value) ? "yellowgreen" : undefined }}
                     >
                         {cellContent(value)}
                     </div>
