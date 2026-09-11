@@ -37,6 +37,14 @@ h1 {
     box-shadow: none;
 }
 
+.ButtonAP:disabled {
+    color: black;
+    border: 3px solid black;
+    background-color: gray;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
 .form-control:focus {
     border: transparent;
     box-shadow: none;

@@ -10,6 +10,10 @@ export function APTextClient({ client }: APTextClientProps): JSX.Element {
     if (!client.authenticated) {
         return <></>;
     }
+    return <TextClient client={client} />;
+}
+
+function TextClient({ client }: APTextClientProps): JSX.Element {
     const [text, setText] = useState("");
     const [errText, setErrText] = useState("");
     const [messages, setMessages] = useState<string[]>([]);
@@ -54,7 +58,7 @@ export function APTextClient({ client }: APTextClientProps): JSX.Element {
                         placeholder=""
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        onKeyPress={(e) => {
+                        onKeyDown={(e) => {
                             if (e.key === "Enter") {
                                 sendMessage();
                             }

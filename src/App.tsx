@@ -41,3 +41,7 @@ export default App;
 // Change logo of site (shuffled ap logo 8puzzle).
 // Make DeathLink tell user that someone died, and make sure the player knows who it was so the player can KILL THEM
 // Hide chat button, colored chat.
+// Goal screen.
+// Highlight on hovered square.
+// Singleplayer.
+// Square bg change when on correct spot.
