@@ -39,5 +39,5 @@ export default App;
 // Keep track of checked locations so I dont spam the server.
 // Make puzzle save state in between sessions (datastorage?)
 // Change logo of site (shuffled ap logo 8puzzle).
-// Add my funny deathlink idea.
+// Make DeathLink tell user that someone died, and make sure the player knows who it was so the player can KILL THEM
 // Hide chat button, colored chat.

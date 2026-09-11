@@ -4,7 +4,7 @@ import { Client } from "archipelago.js";
 import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
 import APIcon from "../images/APIcon.png";
 
-const gridSizes: Record<number, string> = {
+const GRID_TEMPLATES: Record<number, string> = {
     9: "repeat(3, 150px)",
     16: "repeat(4, 120px)",
     25: "repeat(5, 100px)",
@@ -34,19 +34,12 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     const [puzzle, setPuzzle] = useState<number[][]>(slotData.puzzle.map(row => [...row]));
     const [revealed, setRevealed] = useState<string[]>([]);
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
-    const goalPuzzle: number[][] = [];
-    let count = 1;
-    for (let i = 0; i < dimSize; i++) {
-        goalPuzzle.push([]);
-
-        for (let j = 0; j < dimSize; j++) {
-            if (i * dimSize + j === size - 1) {
-                goalPuzzle[i].push(0);
-            } else {
-                goalPuzzle[i].push(count++);
-            }
-        }
-    }
+    const goalPuzzle = Array.from({ length: dimSize }, (_, i) =>
+        Array.from({ length: dimSize }, (_, j) => {
+            const value = i * dimSize + j + 1;
+            return value === size ? 0 : value;
+        })
+    );
 
     useEffect(() => {
         const handleItemsReceived = () => {
@@ -59,6 +52,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
         };
 
         handleItemsReceived();
+        handleLocationsChecked();
         client.items.on("itemsReceived", handleItemsReceived);
         client.room.on("locationsChecked", handleLocationsChecked);
 
@@ -69,46 +63,23 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     }, [client]);
 
     useEffect(() => {
+        if (!slotData.deathLink) return;
+        const handleDeathLink = () => {
+            resetPuzzle();
+        };
+
+        client.deathLink.on("deathReceived", handleDeathLink);
+
+        return () => {
+            client.deathLink.off("deathReceived", handleDeathLink);
+        };
+    }, [client]);
+
+    useEffect(() => {
         checkPuzzle(puzzle);
     }, [puzzle, revealed]);
 
     useEffect(() => {
-        const handleKeyDown = (event: KeyboardEvent) => {
-            let emptyRow = -1;
-            let emptyCol = -1;
-            for (let i = 0; i < dimSize; i++) {
-                for (let j = 0; j < dimSize; j++) {
-                    if (puzzle[i][j] === 0) {
-                        emptyRow = i;
-                        emptyCol = j;
-                        break;
-                    }
-                }
-            }
-            switch (event.key) {
-                case "ArrowLeft":
-                    if (emptyCol < dimSize - 1) {
-                        movePuzzle(emptyRow, emptyCol + 1);
-                    }
-                    break;
-                case "ArrowRight":
-                    if (emptyCol > 0) {
-                        movePuzzle(emptyRow, emptyCol - 1);
-                    }
-                    break;
-                case "ArrowUp":
-                    if (emptyRow < dimSize - 1) {
-                        movePuzzle(emptyRow + 1, emptyCol);
-                    }
-                    break;
-                case "ArrowDown":
-                    if (emptyRow > 0) {
-                        movePuzzle(emptyRow - 1, emptyCol);
-                    }
-                    break;
-            }
-        };
-
         window.addEventListener("keydown", handleKeyDown);
 
         return () => {
@@ -120,14 +91,14 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
         let totalSolved = 0;
         for (let i = 0; i < dimSize; i++) {
             for (let j = 0; j < dimSize; j++) {
-                if (revealed.includes(board[i][j].toString()) && board[i][j] === goalPuzzle[i][j]) {
+                if (revealed.includes(board[i][j].toString()) && board[i][j] === goalPuzzle[i][j] && !checkedLocations.includes(board[i][j])) {
                     client.check(board[i][j]);
                     totalSolved++;
                 }
             }
         }
         client.check(1000 + totalSolved);
-        if (totalSolved == size - 1) {
+        if (totalSolved === size - 1) {
             client.goal();
         }
     }
@@ -135,27 +106,62 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     function movePuzzle(row: number, col: number) {
         const newPuzzle = puzzle.map(row => [...row]);
         const targetDirections = [
-            { row: row - 1, col: col },
-            { row: row + 1, col: col },
-            { row: row, col: col - 1 },
-            { row: row, col: col + 1 }
+            { row: row - 1, col },
+            { row: row + 1, col },
+            { row, col: col - 1 },
+            { row, col: col + 1 }
         ];
-        targetDirections.forEach(({ row: targetRow, col: targetCol }) => {
-            if (newPuzzle[targetRow]?.[targetCol] === 0) {
-                newPuzzle[targetRow][targetCol] = newPuzzle[row][col];
-                newPuzzle[row][col] = 0;
-            }
-        });
+        const target = targetDirections.find(
+            ({ row: targetRow, col: targetCol }) =>
+                newPuzzle[targetRow]?.[targetCol] === 0
+        );
+
+        if (target) {
+            newPuzzle[target.row][target.col] = newPuzzle[row][col];
+            newPuzzle[row][col] = 0;
+        }
         setPuzzle(newPuzzle);
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+        const emptyRow = puzzle.findIndex(row => row.includes(0));
+        const emptyCol = puzzle[emptyRow].indexOf(0);
+        switch (event.key) {
+            case "ArrowLeft":
+                if (emptyCol < dimSize - 1) {
+                    movePuzzle(emptyRow, emptyCol + 1);
+                }
+                break;
+            case "ArrowRight":
+                if (emptyCol > 0) {
+                    movePuzzle(emptyRow, emptyCol - 1);
+                }
+                break;
+            case "ArrowUp":
+                if (emptyRow < dimSize - 1) {
+                    movePuzzle(emptyRow + 1, emptyCol);
+                }
+                break;
+            case "ArrowDown":
+                if (emptyRow > 0) {
+                    movePuzzle(emptyRow - 1, emptyCol);
+                }
+                break;
+        }
     }
 
     function cellContent(value: number): React.ReactNode {
         if (value === 0) {
             return "";
-        } else if (revealed.includes(value.toString())) {
+        }
+        if (revealed.includes(value.toString())) {
             return value;
         }
         return <img src={APIcon} alt="Unrevealed Cell" className="PuzzleCellImage" />;
+    }
+
+    function resetPuzzle() {
+        setPuzzle(slotData.puzzle.map(row => [...row]));
     }
 
     return (
@@ -163,8 +169,8 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
             <div
                 className="PuzzleUI"
                 style={{
-                    gridTemplateColumns: gridSizes[size],
-                    gridTemplateRows: gridSizes[size]
+                    gridTemplateColumns: GRID_TEMPLATES[size],
+                    gridTemplateRows: GRID_TEMPLATES[size]
                 }}
             >
                 {puzzle.map((row, rowIndex) => row.map((value, colIndex) =>
@@ -178,7 +184,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
                     </div>
                 ))}
             </div>
-            <Button className="ButtonAP" onClick={() => setPuzzle(slotData.puzzle.map(row => [...row]))}>
+            <Button className="ButtonAP" onClick={() => resetPuzzle()}>
                 RESET PUZZLE
             </Button>
         </div>
