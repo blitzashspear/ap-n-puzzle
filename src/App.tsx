@@ -43,5 +43,4 @@ export default App;
 // Hide chat button, colored chat.
 // Goal screen.
 // Highlight on hovered square.
-// Singleplayer.
 // Square bg change when on correct spot.
