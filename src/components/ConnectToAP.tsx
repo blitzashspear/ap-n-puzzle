@@ -79,7 +79,7 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
             {client.authenticated && (
                 <Button
                     className="ButtonAP"
-                    onClick={() => setShowAPInfo((visible) => !visible)}
+                    onClick={() => setShowAPInfo(visible => !visible)}
                 >
                     {showAPInfo ? "HIDE AP INFO" : "SHOW AP INFO"}
                 </Button>
