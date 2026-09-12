@@ -5,11 +5,13 @@ import { ConnectToAP } from "./components/ConnectToAP";
 import { APTextClient } from "./components/APTextClient";
 import { NPuzzle } from "./components/NPuzzle";
 import { NPuzzleSlotData } from "./types/NPuzzleSlotData";
+import { DemoPuzzle } from "./components/DemoPuzzle";
 
 
 function App(): JSX.Element {
     const [client, setClient] = useState<Client>(new Client());
     const [slotData, setSlotData] = useState<NPuzzleSlotData | null>(null);
+    const isDevelopment = process.env.NODE_ENV === "development";
 
     useEffect(() => {
         const handleDisconnected = () => {
@@ -30,6 +32,7 @@ function App(): JSX.Element {
             <ConnectToAP client={client} setSlotData={setSlotData} />
             <APTextClient client={client} />
             <NPuzzle client={client} slotData={slotData} />
+            {isDevelopment && !client.authenticated && <DemoPuzzle />}
         </div>
     );
 }
@@ -38,9 +41,9 @@ export default App;
 // TODO (Client)
 // Keep track of checked locations so I dont spam the server.
 // Make puzzle save state in between sessions (datastorage?)
-// Change logo of site (shuffled ap logo 8puzzle).
 // Make DeathLink tell user that someone died, and make sure the player knows who it was so the player can KILL THEM
-// Hide chat button, colored chat.
+// Hide chat button
+// Color items in chat.
 // Goal screen.
-// Highlight on hovered square.
 // Square bg change when on correct spot.
+// Sounds

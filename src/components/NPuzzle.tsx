@@ -5,10 +5,14 @@ import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
 import APIcon from "../images/APIcon.png";
 
 const GRID_TEMPLATES: Record<number, string> = {
-    9: "repeat(3, 150px)",
+    9: "repeat(3, 160px)",
     16: "repeat(4, 120px)",
-    25: "repeat(5, 100px)",
-    36: "repeat(6, 80px)"
+    25: "repeat(5, 95px)",
+    36: "repeat(6, 80px)",
+    49: "repeat(7, 67px)",
+    64: "repeat(8, 58px)",
+    81: "repeat(9, 51px)",
+    100: "repeat(10, 45px)"
 };
 
 type NPuzzleProps = {
@@ -176,7 +180,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
                 {puzzle.map((row, rowIndex) => row.map((value, colIndex) =>
                     <div
                         key={`${rowIndex}-${colIndex}`}
-                        className={`Size-${size}`}
+                        className={`${value === 0 ? "PuzzleBlank" : ""} Size-${size}`}
                         onClick={() => movePuzzle(rowIndex, colIndex)}
                         style={{ color: checkedLocations.includes(value) ? "yellowgreen" : undefined }}
                     >
