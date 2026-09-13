@@ -38,6 +38,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     const [puzzle, setPuzzle] = useState<number[][]>(slotData.puzzle.map(row => [...row]));
     const [revealed, setRevealed] = useState<string[]>([]);
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
+    const [deathLinkMessage, setDeathLinkMessage] = useState("");
     const goalPuzzle = Array.from({ length: dimSize }, (_, i) =>
         Array.from({ length: dimSize }, (_, j) => {
             const value = i * dimSize + j + 1;
@@ -68,14 +69,25 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
 
     useEffect(() => {
         if (!slotData.deathLink) return;
-        const handleDeathLink = () => {
+        let deathLinkMessageTimeout: ReturnType<typeof setTimeout>;
+        const handleDeathLink = (source: string, _time: number, cause?: string) => {
             resetPuzzle();
+            setDeathLinkMessage(cause || `${source} died!`);
+            if (deathLinkMessageTimeout) {
+                clearTimeout(deathLinkMessageTimeout);
+            }
+            deathLinkMessageTimeout = setTimeout(() => {
+                setDeathLinkMessage("");
+            }, 5000);
         };
 
         client.deathLink.on("deathReceived", handleDeathLink);
 
         return () => {
             client.deathLink.off("deathReceived", handleDeathLink);
+            if (deathLinkMessageTimeout) {
+                clearTimeout(deathLinkMessageTimeout);
+            }
         };
     }, [client]);
 
@@ -170,6 +182,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
 
     return (
         <div className="NPuzzleContainer">
+            {deathLinkMessage}
             <div
                 className="PuzzleUI"
                 style={{
