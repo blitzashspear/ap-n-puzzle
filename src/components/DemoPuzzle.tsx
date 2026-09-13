@@ -92,13 +92,9 @@ export function DemoPuzzle(): JSX.Element {
 
     function changePuzzleSize(newSize: number) {
         setSize(newSize);
-        setPuzzle(generatePuzzle(newSize));
-    }
-
-    function scramblePuzzle() {
-        const scrambledPuzzle = puzzle.map(row => [...row]);
-        let blankRow = scrambledPuzzle.findIndex(row => row.includes(0));
-        let blankCol = scrambledPuzzle[blankRow].indexOf(0);
+        const newPuzzle = generatePuzzle(newSize);
+        let blankRow = newPuzzle.findIndex(row => row.includes(0));
+        let blankCol = newPuzzle[blankRow].indexOf(0);
 
         for (let move = 0; move < 100 * size; move++) {
             const possibleMoves = [
@@ -106,16 +102,16 @@ export function DemoPuzzle(): JSX.Element {
                 { row: blankRow + 1, col: blankCol },
                 { row: blankRow, col: blankCol - 1 },
                 { row: blankRow, col: blankCol + 1 }
-            ].filter(({ row, col }) => scrambledPuzzle[row]?.[col] !== undefined);
+            ].filter(({ row, col }) => newPuzzle[row]?.[col] !== undefined);
             const target = possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
 
-            scrambledPuzzle[blankRow][blankCol] = scrambledPuzzle[target.row][target.col];
-            scrambledPuzzle[target.row][target.col] = 0;
+            newPuzzle[blankRow][blankCol] = newPuzzle[target.row][target.col];
+            newPuzzle[target.row][target.col] = 0;
             blankRow = target.row;
             blankCol = target.col;
         }
 
-        setPuzzle(scrambledPuzzle);
+        setPuzzle(newPuzzle);
     }
 
     return (
@@ -162,8 +158,8 @@ export function DemoPuzzle(): JSX.Element {
                 <Button className="ButtonAP" onClick={() => changePuzzleSize(100)}>
                     100
                 </Button>
-                <Button className="ButtonAP" onClick={scramblePuzzle}>
-                    SCRAMBLE
+                <Button className="ButtonAP" onClick={() => setPuzzle(initPuzzle)}>
+                    SOLVE
                 </Button>
             </div>
         </div>
