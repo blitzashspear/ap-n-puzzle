@@ -69,6 +69,7 @@ h1 {
     max-height: 825px;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-left: 6px;
     padding-right: 6px;
     background-color: rgba(0, 0, 0, 0.25);
 }

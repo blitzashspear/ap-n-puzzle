@@ -6,6 +6,7 @@ import { APTextClient } from "./components/APTextClient";
 import { NPuzzle } from "./components/NPuzzle";
 import { NPuzzleSlotData } from "./types/NPuzzleSlotData";
 import { DemoPuzzle } from "./components/DemoPuzzle";
+import { DemoText } from "./components/DemoText";
 
 
 function App(): JSX.Element {
@@ -33,6 +34,7 @@ function App(): JSX.Element {
             <APTextClient client={client} />
             <NPuzzle client={client} slotData={slotData} />
             {isDevelopment && !client.authenticated && <DemoPuzzle />}
+            {isDevelopment && !client.authenticated && <DemoText />}
         </div>
     );
 }
@@ -41,8 +43,6 @@ export default App;
 // TODO (Client)
 // Keep track of checked locations so I dont spam the server.
 // Make puzzle save state in between sessions (datastorage?)
-// Make DeathLink tell user that someone died, and make sure the player knows who it was so the player can KILL THEM
-// Hide chat button
 // Color items in chat.
 // Goal screen.
 // Square bg change when on correct spot.

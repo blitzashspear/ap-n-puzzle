@@ -17,6 +17,7 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
     const [text, setText] = useState("");
     const [errText, setErrText] = useState("");
     const [messages, setMessages] = useState<string[]>([]);
+    const [hideMessages, setHideMessages] = useState(false);
 
     useEffect(() => {
         const handleMessage = (content: string) => {
@@ -67,6 +68,9 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
                 </InputGroup>
                 <Button className="ButtonAP" onClick={sendMessage}>
                     SEND
+                </Button>
+                <Button className="ButtonAP" onClick={() => setHideMessages(!hideMessages)}>
+                    {hideMessages ? "SHOW" : "HIDE"}
                 </Button>
             </div>
         </div>
