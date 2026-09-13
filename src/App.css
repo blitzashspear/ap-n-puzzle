@@ -111,7 +111,6 @@ h1 {
 .PuzzleUI div {
     background-color: black;
     border-radius: 5px;
-    font-size: 200%;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -139,39 +138,47 @@ h1 {
 .Size-9 {
     height: 165px;
     width: 165px;
+    font-size: 300%;
 }
 
 .Size-16 {
     height: 125px;
     width: 125px;
+    font-size: 275%;
 }
 
 .Size-25 {
     height: 100px;
     width: 100px;
+    font-size: 250%;
 }
 
 .Size-36 {
     height: 85px;
     width: 85px;
+    font-size: 225%;
 }
 
 .Size-49 {
     height: 70px;
     width: 70px;
+    font-size: 200%;
 }
 
 .Size-64 {
     height: 60px;
     width: 60px;
+    font-size: 190%;
 }
 
 .Size-81 {
     height: 55px;
     width: 55px;
+    font-size: 180%;
 }
 
 .Size-100 {
     height: 50px;
     width: 50px;
+    font-size: 170%;
 }
