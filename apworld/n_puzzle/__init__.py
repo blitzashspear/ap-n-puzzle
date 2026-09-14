@@ -55,7 +55,7 @@ class NPuzzleItem(Item):
 class NPuzzleWorld(World):
     """
     It's everybody's favorite time waster: the sliding puzzle!
-    Now with 4 different sizes to choose from!
+    Now with 8 different sizes to choose from!
     """
 
     game = "n-Puzzle"
