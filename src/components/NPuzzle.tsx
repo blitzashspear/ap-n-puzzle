@@ -135,6 +135,8 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
         if (target) {
             newPuzzle[target.row][target.col] = newPuzzle[row][col];
             newPuzzle[row][col] = 0;
+        } else if (slotData.deathLink) {
+            client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
         }
         setPuzzle(newPuzzle);
     }

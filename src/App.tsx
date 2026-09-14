@@ -47,4 +47,3 @@ export default App;
 // Goal screen.
 // Square bg change when on correct spot.
 // Sounds
-// Actually implement deathlink.
