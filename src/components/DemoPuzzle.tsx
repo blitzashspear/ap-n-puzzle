@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import APIcon from "../images/APIcon.png";
 
 const GRID_TEMPLATES: Record<number, string> = {
     9: "repeat(3, 160px)",
@@ -15,6 +16,7 @@ const GRID_TEMPLATES: Record<number, string> = {
 export function DemoPuzzle(): JSX.Element {
     const [size, setSize] = useState(9);
     const dimSize = Math.sqrt(size);
+    const [showLogo, setShowLogo] = useState(false);
     function generatePuzzle(puzzleSize: number): number[][] {
         const puzzleDimSize = Math.sqrt(puzzleSize);
         return Array.from({ length: puzzleDimSize }, (_, i) =>
@@ -87,6 +89,9 @@ export function DemoPuzzle(): JSX.Element {
         if (value === 0) {
             return "";
         }
+        if (showLogo) {
+            return <img src={APIcon} alt="Archipelago logo" className="PuzzleCellImage" />;
+        }
         return value;
     }
 
@@ -133,34 +138,41 @@ export function DemoPuzzle(): JSX.Element {
                     </div>
                 ))}
             </div>
-            <div className="DemoPuzzleButtons" style={{ flexWrap: "wrap" }}>
-                <Button className="ButtonAP" onClick={() => changePuzzleSize(9)}>
-                    9
-                </Button>
-                <Button className="ButtonAP" onClick={() => changePuzzleSize(16)}>
-                    16
-                </Button>
-                <Button className="ButtonAP" onClick={() => changePuzzleSize(25)}>
-                    25
-                </Button>
-                <Button className="ButtonAP" onClick={() => changePuzzleSize(36)}>
-                    36
-                </Button>
-                <Button className="ButtonAP" onClick={() => changePuzzleSize(49)}>
-                    49
-                </Button>
-                <Button className="ButtonAP" onClick={() => changePuzzleSize(64)}>
-                    64
-                </Button>
-                <Button className="ButtonAP" onClick={() => changePuzzleSize(81)}>
-                    81
-                </Button>
-                <Button className="ButtonAP" onClick={() => changePuzzleSize(100)}>
-                    100
-                </Button>
-                <Button className="ButtonAP" onClick={() => setPuzzle(initPuzzle)}>
-                    SOLVE
-                </Button>
+            <div>
+                <div className="DemoPuzzleButtons">
+                    <Button className="ButtonAP" onClick={() => changePuzzleSize(9)}>
+                        9
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => changePuzzleSize(16)}>
+                        16
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => changePuzzleSize(25)}>
+                        25
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => changePuzzleSize(36)}>
+                        36
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => changePuzzleSize(49)}>
+                        49
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => changePuzzleSize(64)}>
+                        64
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => changePuzzleSize(81)}>
+                        81
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => changePuzzleSize(100)}>
+                        100
+                    </Button>
+                </div>
+                <div className="DemoPuzzleButtons">
+                    <Button className="ButtonAP" onClick={() => setPuzzle(initPuzzle)}>
+                        SOLVE
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => setShowLogo(!showLogo)}>
+                        {showLogo ? "NUMBERS" : "LOGO"}
+                    </Button>
+                </div>
             </div>
         </div>
     );

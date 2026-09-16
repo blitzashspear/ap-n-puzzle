@@ -43,7 +43,6 @@ export default App;
 // TODO (Client)
 // Keep track of checked locations so I dont spam the server.
 // Make puzzle save state in between sessions (datastorage?)
-// Color items in chat.
 // Goal screen.
 // Square bg change when on correct spot.
 // Sounds

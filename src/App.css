@@ -84,6 +84,22 @@ h1 {
     text-align: left;
 }
 
+.APItemUsefulProgression {
+    color: rgb(255, 223, 0);
+}
+
+.APItemProgression {
+    color: rgb(168, 147, 228);
+}
+
+.APItemUseful {
+    color: rgb(98, 122, 198);
+}
+
+.APItemTrap {
+    color: rgb(211, 113, 102);
+}
+
 .NPuzzleContainer {
     display: flex;
     flex-direction: column;

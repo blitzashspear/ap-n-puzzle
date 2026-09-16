@@ -49,7 +49,9 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     useEffect(() => {
         const handleItemsReceived = () => {
             const allItems = client.items.received.map(item => item.name);
-            const items = allItems.filter(item => /^\d+$/.test(item));
+            const items = allItems
+                .map(item => /^Unlock (\d+)$/.exec(item)?.[1])
+                .filter((item): item is string => item !== undefined);
             setRevealed(items);
         };
         const handleLocationsChecked = () => {

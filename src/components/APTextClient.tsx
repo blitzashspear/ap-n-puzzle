@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
-import { Client } from "archipelago.js";
+import { Client, MessageNode } from "archipelago.js";
 
 type APTextClientProps = {
     client: Client;
+};
+
+type ChatMessage = {
+    nodes: MessageNode[];
 };
 
 export function APTextClient({ client }: APTextClientProps): JSX.Element {
@@ -16,12 +20,12 @@ export function APTextClient({ client }: APTextClientProps): JSX.Element {
 function TextClient({ client }: APTextClientProps): JSX.Element {
     const [text, setText] = useState("");
     const [errText, setErrText] = useState("");
-    const [messages, setMessages] = useState<string[]>([]);
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [hideMessages, setHideMessages] = useState(false);
 
     useEffect(() => {
-        const handleMessage = (content: string) => {
-            setMessages(prevMessages => [...prevMessages, content]);
+        const handleMessage = (_content: string, nodes: MessageNode[]) => {
+            setMessages(prevMessages => [...prevMessages, { nodes }]);
             setErrText("");
         };
 
@@ -43,13 +47,36 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
         }
     }
 
+    function getItemClassName(node: MessageNode): string {
+        if (node.type !== "item") {
+            return "";
+        }
+        if (node.item.progression && node.item.useful) {
+            return "APItemUsefulProgression";
+        }
+        if (node.item.progression) {
+            return "APItemProgression";
+        }
+        if (node.item.useful) {
+            return "APItemUseful";
+        }
+        if (node.item.trap) {
+            return "APItemTrap";
+        }
+        return "";
+    }
+
     return (
         <div className="APTextClient">
             <div className="APTextClientText">
                 {errText}
                 {messages.map((message, index) => {
                     return <div key={index} className="APMessage">
-                        {message}
+                        {message.nodes.map((node, nodeIndex) => {
+                            return <span key={nodeIndex} className={getItemClassName(node)}>
+                                {node.text}
+                            </span>;
+                        })}
                     </div>;
                 })}
             </div>
