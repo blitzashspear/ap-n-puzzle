@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Client } from "archipelago.js";
 import "./App.css";
 import { ConnectToAP } from "./components/ConnectToAP";
+import { DownloadAPWorld } from "./components/DownloadAPWorld";
 import { APTextClient } from "./components/APTextClient";
 import { NPuzzle } from "./components/NPuzzle";
 import { NPuzzleSlotData } from "./types/NPuzzleSlotData";
@@ -33,6 +34,7 @@ function App(): JSX.Element {
             <ConnectToAP client={client} setSlotData={setSlotData} />
             <APTextClient client={client} />
             <NPuzzle client={client} slotData={slotData} />
+            {!client.authenticated && <DownloadAPWorld />}
             {isDevelopment && !client.authenticated && <DemoPuzzle />}
             {isDevelopment && !client.authenticated && <DemoText />}
         </div>
