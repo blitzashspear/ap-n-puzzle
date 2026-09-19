@@ -2,7 +2,7 @@
 
 *Required Software*
 
-- [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases/latest)
+- [Archipelago](https://github.com/ArchipelagoMW/Archipelago/releases/latest) (must be at least 0.6.7)
 - [The APWorld](https://github.com/blitzashspear/ap-n-puzzle/releases/latest)
 
 *Playing The Game*
