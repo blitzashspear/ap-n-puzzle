@@ -119,7 +119,9 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
                 }
             }
         }
-        client.check(1000 + totalSolved);
+        for (let i = 0; i <= totalSolved; i++) {
+            client.check(1000 + i);
+        }
         if (totalSolved === size - 1) {
             client.goal();
         }

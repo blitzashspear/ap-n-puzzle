@@ -43,7 +43,6 @@ function App(): JSX.Element {
 
 export default App;
 // TODO (Client)
-// Keep track of checked locations so I dont spam the server.
 // Make puzzle save state in between sessions (datastorage?)
 // Goal screen.
 // Square bg change when on correct spot.
