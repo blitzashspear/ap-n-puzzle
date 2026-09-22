@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { Client } from "archipelago.js";
 import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
@@ -14,6 +14,7 @@ const GRID_TEMPLATES: Record<number, string> = {
     81: "repeat(9, 51px)",
     100: "repeat(10, 45px)"
 };
+const DEATH_LINK_COOLDOWN_MS = 30000;
 
 type NPuzzleProps = {
     client: Client;
@@ -39,6 +40,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     const [revealed, setRevealed] = useState<string[]>([]);
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
     const [deathLinkMessage, setDeathLinkMessage] = useState("");
+    const lastDeathLinkSentAt = useRef(0);
     const goalPuzzle = Array.from({ length: dimSize }, (_, i) =>
         Array.from({ length: dimSize }, (_, j) => {
             const value = i * dimSize + j + 1;
@@ -137,7 +139,8 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
         if (target) {
             newPuzzle[target.row][target.col] = newPuzzle[row][col];
             newPuzzle[row][col] = 0;
-        } else if (slotData.deathLink) {
+        } else if (slotData.deathLink && Date.now() - lastDeathLinkSentAt.current >= DEATH_LINK_COOLDOWN_MS) {
+            lastDeathLinkSentAt.current = Date.now();
             client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
         }
         setPuzzle(newPuzzle);
