@@ -14,7 +14,8 @@ const GRID_TEMPLATES: Record<number, string> = {
     81: "repeat(9, 51px)",
     100: "repeat(10, 45px)"
 };
-const DEATH_LINK_COOLDOWN_MS = 30000;
+const DEATH_LINK_COOLDOWN = 30000; // 30s
+const DATA_STORAGE_COOLDOWN = 1000; // 1s
 
 type NPuzzleProps = {
     client: Client;
@@ -40,7 +41,8 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     const [revealed, setRevealed] = useState<string[]>([]);
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
     const [deathLinkMessage, setDeathLinkMessage] = useState("");
-    const lastDeathLinkSentAt = useRef(0);
+    const lastDeathLink = useRef(0);
+    const lastDataStorage = useRef(0);
     const goalPuzzle = Array.from({ length: dimSize }, (_, i) =>
         Array.from({ length: dimSize }, (_, j) => {
             const value = i * dimSize + j + 1;
@@ -125,6 +127,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
 
     function movePuzzle(row: number, col: number) {
         const newPuzzle = puzzle.map(row => [...row]);
+        const theTime = Date.now();
         const targetDirections = [
             { row: row - 1, col },
             { row: row + 1, col },
@@ -139,8 +142,14 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
         if (target) {
             newPuzzle[target.row][target.col] = newPuzzle[row][col];
             newPuzzle[row][col] = 0;
-        } else if (slotData.deathLink && Date.now() - lastDeathLinkSentAt.current >= DEATH_LINK_COOLDOWN_MS) {
-            lastDeathLinkSentAt.current = Date.now();
+            if (theTime - lastDataStorage.current >= DATA_STORAGE_COOLDOWN) {
+                lastDataStorage.current = theTime;
+                client.storage
+                    .prepare("puzzle", newPuzzle)
+                    .commit();
+            }
+        } else if (slotData.deathLink && theTime - lastDeathLink.current >= DEATH_LINK_COOLDOWN) {
+            lastDeathLink.current = theTime;
             client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
         }
         setPuzzle(newPuzzle);
