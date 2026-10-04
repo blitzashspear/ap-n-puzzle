@@ -43,7 +43,7 @@ function App(): JSX.Element {
 
 export default App;
 // TODO (Client)
-// Make puzzle save state in between sessions (datastorage?)
+// Retrieve puzzle from datastorage when reloading page.
 // Goal screen.
 // Square bg change when on correct spot.
 // Sounds

@@ -12,7 +12,7 @@
 *What options can I enable to spice things up?*
 
 * The size of the board can be changed.
-* DeathLink can be enabled.
+* That's it.
 
 *Common Questions*
 

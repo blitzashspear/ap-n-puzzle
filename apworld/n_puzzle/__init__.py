@@ -7,7 +7,7 @@ from .puzzle import generate_puzzle
 max_puzzle_size = max(OPTION_TO_SIZE.values())
 
 def get_item_name(x: int):
-    return str(x)
+    return f"Unlock {x}"
 
 def get_position_name(x: int):
     return f"{x}'s Position"
@@ -120,5 +120,5 @@ class NPuzzleWorld(World):
         return {
             "size": OPTION_TO_SIZE[self.options.size],
             "puzzle": generate_puzzle(self),
-            "death_link": self.options.death_link
+            "death_link": self.options.death_link.value
         }
