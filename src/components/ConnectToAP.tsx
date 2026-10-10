@@ -26,7 +26,8 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
         try {
             setSlotData(await client.login<NPuzzleSlotData>(host + ":" + port, player, "n-Puzzle", { password }));
             setConnectMessage("");
-            client.check(999); // Starting Number
+            // I will kill 7 thousand multiworlds by sending my Starting Number check before the countdown.
+            client.check(999);
         } catch (error) {
             setSlotData(null);
             setConnectMessage("Failed to connect to Archipelago.");

@@ -13,6 +13,7 @@ const GRID_TEMPLATES: Record<number, string> = {
     100: "repeat(10, 45px)"
 };
 
+// IF MY DEMO STUFF SHOWS UP IN PROD I WILL DIE
 export function DemoPuzzle(): JSX.Element {
     const [size, setSize] = useState(9);
     const dimSize = Math.sqrt(size);

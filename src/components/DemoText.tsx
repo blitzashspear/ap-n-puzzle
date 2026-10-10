@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
 
+// IF MY DEMO STUFF SHOWS UP IN PROD I WILL DIE
 export function DemoText(): JSX.Element {
     const [text, setText] = useState("");
     const [messages, setMessages] = useState<string[]>([]);

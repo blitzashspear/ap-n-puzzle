@@ -28,6 +28,7 @@ function App(): JSX.Element {
         };
     }, [client]);
 
+    // Making everything into different components like my uni project was a big fat fucking mistake but im way too far in god if you are watching please forgive me then reformat everything pretty please i will give you a cookie.
     return (
         <div className="App">
             <h1>n-Puzzle Archipelago</h1>

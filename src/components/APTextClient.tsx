@@ -47,6 +47,7 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
         }
     }
 
+    // Literally only used to get the text color. App.css, line 93.
     function getItemClassName(node: MessageNode): string {
         if (node.type !== "item") {
             return "";

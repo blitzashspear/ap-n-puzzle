@@ -25,27 +25,43 @@ type NPuzzleProps = {
 type NPuzzleBoardProps = {
     client: Client;
     slotData: NPuzzleSlotData;
+    loadedPuzzle: number[][];
 };
 
 export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
-    if (!client.authenticated || !slotData) {
+    const [storedPuzzle, setStoredPuzzle] = useState<number[][] | null>(null);
+
+    useEffect(() => {
+        if (!client.authenticated || !slotData) {
+            setStoredPuzzle(null);
+            return;
+        }
+        setStoredPuzzle(null);
+        client.storage.fetch<number[][]>("puzzle").then(storedPuzzle => {
+            setStoredPuzzle(storedPuzzle ?? slotData.puzzle);
+        }).catch(() => {
+            setStoredPuzzle(slotData.puzzle);
+        });
+    }, [client, slotData]);
+
+    if (!client.authenticated || !slotData || !storedPuzzle) {
         return <></>;
     }
-    return <NPuzzleBoard client={client} slotData={slotData} />;
+    return <NPuzzleBoard client={client} slotData={slotData} loadedPuzzle={storedPuzzle} />;
 }
 
-function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
+function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JSX.Element {
     const size = slotData.size;
     const dimSize = Math.sqrt(size);
-    const [puzzle, setPuzzle] = useState<number[][]>(slotData.puzzle.map(row => [...row]));
+    const [puzzle, setPuzzle] = useState<number[][]>(loadedPuzzle.map(row => [...row]));
     const [revealed, setRevealed] = useState<string[]>([]);
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
     const [deathLinkMessage, setDeathLinkMessage] = useState("");
     const lastDeathLink = useRef(0);
     const lastDataStorage = useRef(0);
-    const goalPuzzle = Array.from({ length: dimSize }, (_, i) =>
-        Array.from({ length: dimSize }, (_, j) => {
-            const value = i * dimSize + j + 1;
+    const goalPuzzle = Array.from({ length: dimSize }, (_, row) =>
+        Array.from({ length: dimSize }, (_, col) => {
+            const value = row * dimSize + col + 1;
             return value === size ? 0 : value;
         })
     );
@@ -53,6 +69,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
     useEffect(() => {
         const handleItemsReceived = () => {
             const allItems = client.items.received.map(item => item.name);
+            // Adios filler items, and just convert the item name to its number.
             const items = allItems
                 .map(item => /^Unlock (\d+)$/.exec(item)?.[1])
                 .filter((item): item is string => item !== undefined);
@@ -109,12 +126,14 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
         };
     }, [puzzle, dimSize]);
 
+    // ah yes the one function where i used actual for loops.
     function checkPuzzle(board: number[][] = puzzle) {
         let totalSolved = 0;
         for (let i = 0; i < dimSize; i++) {
             for (let j = 0; j < dimSize; j++) {
-                if (revealed.includes(board[i][j].toString()) && board[i][j] === goalPuzzle[i][j] && !checkedLocations.includes(board[i][j])) {
-                    client.check(board[i][j]);
+                const val = board[i][j]
+                if (revealed.includes(val.toString()) && val === goalPuzzle[i][j] && !checkedLocations.includes(val)) {
+                    client.check(val);
                     totalSolved++;
                 }
             }
@@ -141,6 +160,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
                 newPuzzle[targetRow]?.[targetCol] === 0
         );
 
+        // Found 0, otherwise nuke entire multiworld.
         if (target) {
             newPuzzle[target.row][target.col] = newPuzzle[row][col];
             newPuzzle[row][col] = 0;
@@ -157,6 +177,7 @@ function NPuzzleBoard({ client, slotData }: NPuzzleBoardProps): JSX.Element {
         setPuzzle(newPuzzle);
     }
 
+    // Tiles moving using arrow keys are relative to the cell moving.
     function handleKeyDown(event: KeyboardEvent) {
         const emptyRow = puzzle.findIndex(row => row.includes(0));
         const emptyCol = puzzle[emptyRow].indexOf(0);
