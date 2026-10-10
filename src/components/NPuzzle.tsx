@@ -177,7 +177,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         setPuzzle(newPuzzle);
     }
 
-    // Tiles moving using arrow keys are relative to the cell moving.
+    // Moving a cell with arrow keys means the cell is going into the blank space.
     function handleKeyDown(event: KeyboardEvent) {
         const emptyRow = puzzle.findIndex(row => row.includes(0));
         const emptyCol = puzzle[emptyRow].indexOf(0);
