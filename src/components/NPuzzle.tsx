@@ -131,7 +131,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         let totalSolved = 0;
         for (let i = 0; i < dimSize; i++) {
             for (let j = 0; j < dimSize; j++) {
-                const val = board[i][j]
+                const val = board[i][j];
                 if (revealed.includes(val.toString()) && val === goalPuzzle[i][j] && !checkedLocations.includes(val)) {
                     client.check(val);
                     totalSolved++;
