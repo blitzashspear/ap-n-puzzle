@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import APIcon from "../images/APIcon.png";
 
+const MOVE_SQUARE_SOUND = `${process.env.PUBLIC_URL}/sounds/MoveSquare.wav`;
+const ILLEGAL_MOVE_SOUND = `${process.env.PUBLIC_URL}/sounds/IllegalMove.wav`;
+
 const GRID_TEMPLATES: Record<number, string> = {
     9: "repeat(3, 160px)",
     16: "repeat(4, 120px)",
@@ -55,6 +58,9 @@ export function DemoPuzzle(): JSX.Element {
         if (target) {
             newPuzzle[target.row][target.col] = newPuzzle[row][col];
             newPuzzle[row][col] = 0;
+            void new Audio(MOVE_SQUARE_SOUND).play();
+        } else {
+            void new Audio(ILLEGAL_MOVE_SOUND).play();
         }
         setPuzzle(newPuzzle);
     }

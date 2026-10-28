@@ -4,6 +4,11 @@ import { Client } from "archipelago.js";
 import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
 import APIcon from "../images/APIcon.png";
 
+const SOUND_MOVE_SQUARE = `${process.env.PUBLIC_URL}/sounds/MoveSquare.wav`;
+const SOUND_ILLEGAL_MOVE = `${process.env.PUBLIC_URL}/sounds/IllegalMove.wav`;
+const SOUND_RESET_PUZZLE = `${process.env.PUBLIC_URL}/sounds/ResetPuzzle.wav`;
+const SOUND_PUZZLE_GOAL = `${process.env.PUBLIC_URL}/sounds/PuzzleGoaled.wav`;
+
 const GRID_TEMPLATES: Record<number, string> = {
     9: "repeat(3, 160px)",
     16: "repeat(4, 120px)",
@@ -142,6 +147,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
             client.check(1000 + i);
         }
         if (totalSolved === size - 1) {
+            void new Audio(SOUND_PUZZLE_GOAL).play();
             client.goal();
         }
     }
@@ -170,9 +176,11 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                     .prepare("puzzle", newPuzzle)
                     .commit();
             }
+            void new Audio(SOUND_MOVE_SQUARE).play();
         } else if (slotData.deathLink && theTime - lastDeathLink.current >= DEATH_LINK_COOLDOWN) {
             lastDeathLink.current = theTime;
             client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
+            void new Audio(SOUND_ILLEGAL_MOVE).play();
         }
         setPuzzle(newPuzzle);
     }
@@ -217,6 +225,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
 
     function resetPuzzle() {
         setPuzzle(slotData.puzzle.map(row => [...row]));
+        void new Audio(SOUND_RESET_PUZZLE).play();
     }
 
     return (

@@ -3,6 +3,8 @@ import { InputGroup, Button, Form } from "react-bootstrap";
 import { Client } from "archipelago.js";
 import { NPuzzleSlotData } from "../types/NPuzzleSlotData";
 
+const SOUND_CONNECT = `${process.env.PUBLIC_URL}/sounds/ButtonPressed.wav`;
+
 type ConnectToAPProps = {
     client: Client;
     setSlotData: (slotData: NPuzzleSlotData | null) => void;
@@ -24,6 +26,7 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
 
         setIsConnecting(true);
         try {
+            void new Audio(SOUND_CONNECT).play();
             setSlotData(await client.login<NPuzzleSlotData>(host + ":" + port, player, "n-Puzzle", { password }));
             setConnectMessage("");
             // I will kill 7 thousand multiworlds by sending my Starting Number check before the countdown.

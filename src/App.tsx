@@ -46,4 +46,3 @@ export default App;
 // TODO (Client)
 // Goal screen.
 // Square bg change when on correct spot.
-// Sounds
