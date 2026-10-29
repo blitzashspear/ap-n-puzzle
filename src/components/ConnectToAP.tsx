@@ -94,7 +94,7 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
                 onClick={client.authenticated
                     ? () => client.socket.disconnect()
                     : () => connectToSlot(host, port, player, password)}
-                disabled={isConnecting || client.authenticated}
+                disabled={isConnecting}
             >
                 {client.authenticated ? "DISCONNECT" : "CONNECT TO ARCHIPELAGO"}
             </Button>

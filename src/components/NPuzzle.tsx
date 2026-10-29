@@ -19,8 +19,9 @@ const GRID_TEMPLATES: Record<number, string> = {
     81: "repeat(9, 51px)",
     100: "repeat(10, 45px)"
 };
-const DEATH_LINK_COOLDOWN = 30000; // 30s
-const DATA_STORAGE_COOLDOWN = 1000; // 1s
+const COOLDOWN_DEATH_LINK = 30000; // 30s
+const COOLDOWN_DEATH_LINK_MSG = 5000; // 5s
+const COOLDOWN_DATA_STORAGE = 1000; // 1s
 
 type NPuzzleProps = {
     client: Client;
@@ -43,6 +44,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
         }
         setStoredPuzzle(null);
         client.storage.fetch<number[][]>("puzzle").then(storedPuzzle => {
+            console.log(storedPuzzle);
             setStoredPuzzle(storedPuzzle ?? slotData.puzzle);
         }).catch(() => {
             setStoredPuzzle(slotData.puzzle);
@@ -63,7 +65,6 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
     const [deathLinkMessage, setDeathLinkMessage] = useState("");
     const lastDeathLink = useRef(0);
-    const lastDataStorage = useRef(0);
     const goalPuzzle = Array.from({ length: dimSize }, (_, row) =>
         Array.from({ length: dimSize }, (_, col) => {
             const value = row * dimSize + col + 1;
@@ -106,7 +107,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
             }
             deathLinkMessageTimeout = setTimeout(() => {
                 setDeathLinkMessage("");
-            }, 5000);
+            }, COOLDOWN_DEATH_LINK_MSG);
         };
 
         client.deathLink.on("deathReceived", handleDeathLink);
@@ -124,6 +125,17 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
     }, [puzzle, revealed]);
 
     useEffect(() => {
+        const timeout = setTimeout(() => {
+            client.storage
+                .prepare("puzzle", puzzle)
+                .replace(puzzle)
+                .commit();
+        }, COOLDOWN_DATA_STORAGE);
+
+        return () => clearTimeout(timeout);
+    }, [client, puzzle]);
+
+    useEffect(() => {
         window.addEventListener("keydown", handleKeyDown);
 
         return () => {
@@ -137,7 +149,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         for (let i = 0; i < dimSize; i++) {
             for (let j = 0; j < dimSize; j++) {
                 const val = board[i][j];
-                if (revealed.includes(val.toString()) && val === goalPuzzle[i][j] && !checkedLocations.includes(val)) {
+                if (revealed.includes(val.toString()) && val === goalPuzzle[i][j]) {
                     client.check(val);
                     totalSolved++;
                 }
@@ -170,14 +182,8 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         if (target) {
             newPuzzle[target.row][target.col] = newPuzzle[row][col];
             newPuzzle[row][col] = 0;
-            if (theTime - lastDataStorage.current >= DATA_STORAGE_COOLDOWN) {
-                lastDataStorage.current = theTime;
-                client.storage
-                    .prepare("puzzle", newPuzzle)
-                    .commit();
-            }
             void new Audio(SOUND_MOVE_SQUARE).play();
-        } else if (slotData.deathLink && theTime - lastDeathLink.current >= DEATH_LINK_COOLDOWN) {
+        } else if (slotData.deathLink && theTime - lastDeathLink.current >= COOLDOWN_DEATH_LINK) {
             lastDeathLink.current = theTime;
             client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
             void new Audio(SOUND_ILLEGAL_MOVE).play();
