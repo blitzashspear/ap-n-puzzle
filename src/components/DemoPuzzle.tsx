@@ -4,6 +4,13 @@ import APIcon from "../images/APIcon.png";
 
 const MOVE_SQUARE_SOUND = `${process.env.PUBLIC_URL}/sounds/MoveSquare.wav`;
 const ILLEGAL_MOVE_SOUND = `${process.env.PUBLIC_URL}/sounds/IllegalMove.wav`;
+const PUZZLE_GOAL_SOUND = `${process.env.PUBLIC_URL}/sounds/PuzzleGoaled.wav`;
+
+function playSound(src: string) {
+    const audio = new Audio(src);
+    audio.volume = 0.5;
+    void audio.play();
+}
 
 const GRID_TEMPLATES: Record<number, string> = {
     9: "repeat(3, 160px)",
@@ -61,9 +68,9 @@ export function DemoPuzzle(): JSX.Element {
         if (target) {
             newPuzzle[target.row][target.col] = newPuzzle[row][col];
             newPuzzle[row][col] = 0;
-            void new Audio(MOVE_SQUARE_SOUND).play();
+            playSound(MOVE_SQUARE_SOUND);
         } else {
-            void new Audio(ILLEGAL_MOVE_SOUND).play();
+            playSound(ILLEGAL_MOVE_SOUND);
         }
         setPuzzle(newPuzzle);
     }
@@ -176,7 +183,13 @@ export function DemoPuzzle(): JSX.Element {
                     </Button>
                 </div>
                 <div className="DemoPuzzleButtons">
-                    <Button className="ButtonAP" onClick={() => setPuzzle(initPuzzle)}>
+                    <Button
+                        className="ButtonAP"
+                        onClick={() => {
+                            setPuzzle(initPuzzle);
+                            playSound(PUZZLE_GOAL_SOUND);
+                        }}
+                    >
                         SOLVE
                     </Button>
                     <Button className="ButtonAP" onClick={() => setShowLogo(!showLogo)}>

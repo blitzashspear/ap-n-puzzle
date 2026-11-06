@@ -9,7 +9,7 @@ const SOUND_ILLEGAL_MOVE = `${process.env.PUBLIC_URL}/sounds/IllegalMove.wav`;
 const SOUND_RESET_PUZZLE = `${process.env.PUBLIC_URL}/sounds/ResetPuzzle.wav`;
 const SOUND_PUZZLE_GOAL = `${process.env.PUBLIC_URL}/sounds/PuzzleGoaled.wav`;
 
-//helper function because by jove bxfr sounds are LOUD
+//helper function to reduce volume because by jove bfxr sounds are LOUD
 function playSound(src: string) {
     const audio = new Audio(src);
     audio.volume = 0.5;
@@ -28,7 +28,7 @@ const GRID_TEMPLATES: Record<number, string> = {
 };
 const COOLDOWN_DEATH_LINK = 30000; // 30s
 const COOLDOWN_DEATH_LINK_MSG = 5000; // 5s
-const COOLDOWN_DATA_STORAGE = 10000; // 10s
+const COOLDOWN_DATA_STORAGE = 3000; // 3s
 
 type NPuzzleProps = {
     client: Client;
@@ -150,7 +150,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [puzzle, dimSize]);
+    }, [puzzle]);
 
     // ah yes the one function where i used actual for loops.
     function checkPuzzle(board: number[][] = puzzle) {
@@ -179,6 +179,8 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
 
     function movePuzzle(row: number, col: number) {
         if (puzzle[row][col] == 0 || puzzleDone.current) {
+            // Bro you clicked the blank tile.
+            // okay or the puzzle literally doesnt need to be moved anymore, smartass.
             return;
         }
         const newPuzzle = puzzle.map(row => [...row]);
