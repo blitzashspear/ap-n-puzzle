@@ -9,6 +9,13 @@ const SOUND_ILLEGAL_MOVE = `${process.env.PUBLIC_URL}/sounds/IllegalMove.wav`;
 const SOUND_RESET_PUZZLE = `${process.env.PUBLIC_URL}/sounds/ResetPuzzle.wav`;
 const SOUND_PUZZLE_GOAL = `${process.env.PUBLIC_URL}/sounds/PuzzleGoaled.wav`;
 
+//helper function because by jove bxfr sounds are LOUD
+function playSound(src: string) {
+    const audio = new Audio(src);
+    audio.volume = 0.5;
+    void audio.play();
+}
+
 const GRID_TEMPLATES: Record<number, string> = {
     9: "repeat(3, 160px)",
     16: "repeat(4, 120px)",
@@ -21,7 +28,7 @@ const GRID_TEMPLATES: Record<number, string> = {
 };
 const COOLDOWN_DEATH_LINK = 30000; // 30s
 const COOLDOWN_DEATH_LINK_MSG = 5000; // 5s
-const COOLDOWN_DATA_STORAGE = 1000; // 1s
+const COOLDOWN_DATA_STORAGE = 10000; // 10s
 
 type NPuzzleProps = {
     client: Client;
@@ -65,6 +72,8 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
     const [deathLinkMessage, setDeathLinkMessage] = useState("");
     const lastDeathLink = useRef(0);
+    const puzzleDone = useRef(false);
+    const [killResetButton, setKillResetButton] = useState(false);
     const goalPuzzle = Array.from({ length: dimSize }, (_, row) =>
         Array.from({ length: dimSize }, (_, col) => {
             const value = row * dimSize + col + 1;
@@ -150,7 +159,9 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
             for (let j = 0; j < dimSize; j++) {
                 const val = board[i][j];
                 if (revealed.includes(val.toString()) && val === goalPuzzle[i][j]) {
-                    client.check(val);
+                    if (!checkedLocations.includes(val)) {
+                        client.check(val);
+                    }
                     totalSolved++;
                 }
             }
@@ -158,13 +169,18 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         for (let i = 1; i <= totalSolved; i++) {
             client.check(1000 + i);
         }
-        if (totalSolved === size - 1) {
-            void new Audio(SOUND_PUZZLE_GOAL).play();
+        if (totalSolved === size - 1 && !puzzleDone.current) {
+            playSound(SOUND_PUZZLE_GOAL);
+            puzzleDone.current = true;
+            setKillResetButton(true);
             client.goal();
         }
     }
 
     function movePuzzle(row: number, col: number) {
+        if (puzzle[row][col] == 0 || puzzleDone.current) {
+            return;
+        }
         const newPuzzle = puzzle.map(row => [...row]);
         const theTime = Date.now();
         const targetDirections = [
@@ -182,11 +198,11 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         if (target) {
             newPuzzle[target.row][target.col] = newPuzzle[row][col];
             newPuzzle[row][col] = 0;
-            void new Audio(SOUND_MOVE_SQUARE).play();
+            playSound(SOUND_MOVE_SQUARE);
         } else if (slotData.deathLink && theTime - lastDeathLink.current >= COOLDOWN_DEATH_LINK) {
             lastDeathLink.current = theTime;
             client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
-            void new Audio(SOUND_ILLEGAL_MOVE).play();
+            playSound(SOUND_ILLEGAL_MOVE);
         }
         setPuzzle(newPuzzle);
     }
@@ -231,7 +247,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
 
     function resetPuzzle() {
         setPuzzle(slotData.puzzle.map(row => [...row]));
-        void new Audio(SOUND_RESET_PUZZLE).play();
+        playSound(SOUND_RESET_PUZZLE);
     }
 
     return (
@@ -255,7 +271,10 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                     </div>
                 ))}
             </div>
-            <Button className="ButtonAP" onClick={() => resetPuzzle()}>
+            <Button
+                className="ButtonAP"
+                onClick={() => resetPuzzle()}
+                disabled={killResetButton}>
                 RESET PUZZLE
             </Button>
         </div>

@@ -43,6 +43,9 @@ export function DemoPuzzle(): JSX.Element {
     }, [puzzle, dimSize]);
 
     function movePuzzle(row: number, col: number) {
+        if (puzzle[row][col] == 0) {
+            return;
+        }
         const newPuzzle = puzzle.map(row => [...row]);
         const targetDirections = [
             { row: row - 1, col },

@@ -3,9 +3,9 @@ import { Button } from "react-bootstrap";
 
 export function DownloadAPWorld(): JSX.Element {
     /**
-     * why i made the decision to make a whole ass component file to render 1 fucking button is beyond me
-     * to compensate i was gonna have chatgpt write me the most heinous docstring ever conceived to man
-     * instead it hung on this
+     * why i made the decision to make a whole ass component file to render 1 fucking button is beyond me.
+     * to compensate i was gonna have chatgpt write me the most heinous docstring ever conceived to man.
+     * instead it hung on this.
      * ╔══════════════════════════════════════════════════════════════════════════════
      * i thought that was infinitely funnier than whatever it was going to generate.
      */
