@@ -23,10 +23,11 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [hideMessages, setHideMessages] = useState(false);
     const messagesContainer = useRef<HTMLDivElement>(null);
+    const shouldAutoScroll = useRef(true);
 
     useEffect(() => {
         const container = messagesContainer.current;
-        if (container) {
+        if (container && shouldAutoScroll.current) {
             container.scrollTop = container.scrollHeight;
         }
     }, [messages]);
@@ -77,7 +78,15 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
 
     return (
         <div className="APTextClient">
-            <div ref={messagesContainer} className="APTextClientText">
+            <div
+                ref={messagesContainer}
+                className="APTextClientText"
+                onScroll={(event) => {
+                    const container = event.currentTarget;
+                    shouldAutoScroll.current =
+                        container.scrollHeight - container.scrollTop - container.clientHeight <= 1;
+                }}
+            >
                 {errText}
                 {messages.map((message, index) => {
                     return <div key={index} className="APMessage">

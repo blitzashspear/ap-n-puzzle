@@ -7,10 +7,11 @@ export function DemoText(): JSX.Element {
     const [messages, setMessages] = useState<string[]>([]);
     const [hideMessages, setHideMessages] = useState(false);
     const messagesContainer = useRef<HTMLDivElement>(null);
+    const shouldAutoScroll = useRef(true);
 
     useEffect(() => {
         const container = messagesContainer.current;
-        if (container) {
+        if (container && shouldAutoScroll.current) {
             container.scrollTop = container.scrollHeight;
         }
     }, [messages, hideMessages]);
@@ -22,7 +23,15 @@ export function DemoText(): JSX.Element {
 
     return (
         <div className="APTextClient">
-            <div ref={messagesContainer} className="APTextClientText" style={{ display: hideMessages ? "none" : "block" }}>
+            <div
+                ref={messagesContainer}
+                className="APTextClientText"
+                onScroll={(event) => {
+                    const container = event.currentTarget;
+                    shouldAutoScroll.current =
+                        container.scrollHeight - container.scrollTop - container.clientHeight <= 1;
+                }}
+            >
                 {messages.map((message, index) => {
                     return <div key={index} className="APMessage">
                         {message}
