@@ -1,7 +1,5 @@
 # An Archipelago Implementation for the n-Puzzle
 
-Current Status: Needs testing.
-
 For more information about the randomizer and it's features, see the
 [docs page](apworld/n_puzzle/docs/en_n-Puzzle.md).
 
