@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
 
 // IF MY DEMO STUFF SHOWS UP IN PROD I WILL DIE
@@ -6,6 +6,14 @@ export function DemoText(): JSX.Element {
     const [text, setText] = useState("");
     const [messages, setMessages] = useState<string[]>([]);
     const [hideMessages, setHideMessages] = useState(false);
+    const messagesContainer = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const container = messagesContainer.current;
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }, [messages, hideMessages]);
 
     function sendMessage() {
         setMessages([...messages, text]);
@@ -14,7 +22,7 @@ export function DemoText(): JSX.Element {
 
     return (
         <div className="APTextClient">
-            <div className="APTextClientText" style={{ display: hideMessages ? "none" : "block" }}>
+            <div ref={messagesContainer} className="APTextClientText" style={{ display: hideMessages ? "none" : "block" }}>
                 {messages.map((message, index) => {
                     return <div key={index} className="APMessage">
                         {message}

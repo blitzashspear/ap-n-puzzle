@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { InputGroup, Button, Form } from "react-bootstrap";
 import { Client, MessageNode } from "archipelago.js";
 
@@ -22,6 +22,14 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
     const [errText, setErrText] = useState("");
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [hideMessages, setHideMessages] = useState(false);
+    const messagesContainer = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const container = messagesContainer.current;
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }, [messages]);
 
     useEffect(() => {
         const handleMessage = (_content: string, nodes: MessageNode[]) => {
@@ -69,7 +77,7 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
 
     return (
         <div className="APTextClient">
-            <div className="APTextClientText">
+            <div ref={messagesContainer} className="APTextClientText">
                 {errText}
                 {messages.map((message, index) => {
                     return <div key={index} className="APMessage">

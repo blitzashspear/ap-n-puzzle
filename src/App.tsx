@@ -46,3 +46,6 @@ export default App;
 // TODO (Client)
 // Goal screen.
 // Repurpose demo stuff as singleplayer.
+
+// TODO (Maybe)
+// QOL maybe: shift all tiles toward blank space when clicked as QOL for bigger puzzles.
