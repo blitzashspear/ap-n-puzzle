@@ -17,7 +17,9 @@ class Size(Choice):
     option_10x10 = 7
 
 class NPuzzleDeathLink(Toggle):
-    """When you attempt to move a tile that is not next to a blank tile, everyone who enabled death link dies. When someone else dies, your puzzle is forcibly reset."""
+    """
+    When you attempt to move a tile that is not next to a blank tile, everyone who enabled death link dies. When someone else dies, your puzzle is forcibly reset.
+    """
     display_name = "Death Link"
     visibility = Visibility.none
     default = False

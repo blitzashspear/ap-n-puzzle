@@ -27,7 +27,7 @@ for i in range(1, max_puzzle_size):
     ITEM_GROUPS["number"].add(get_item_name(i))
 LOCATION_IDS["Starting Number"] = 999
 
-silly_emoticons = [":)", ":(", ">:(", ":3", ":D", "D:", "8)", ":))", "XD", ":P", ":|", ":')"]
+silly_emoticons = [":)", ":(", ">:(", ":3", ":D", "D:", "8)", ":))", "XD", ":P", ":')"]
 for i, silly_emoticon in enumerate(silly_emoticons):
     ITEM_IDS[silly_emoticon] = i+200
 ITEM_IDS["Solved Puzzle"] = 999
