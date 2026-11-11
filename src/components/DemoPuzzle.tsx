@@ -207,6 +207,14 @@ export function DemoPuzzle(): JSX.Element {
                         {showLogo ? "NUMBERS" : "LOGO"}
                     </Button>
                 </div>
+                <div className="Settings">
+                    <Button className="ButtonAP">
+                        RESET PUZZLE
+                    </Button>
+                    <Button className="ButtonAP">
+                        MUTE
+                    </Button>
+                </div>
             </div>
         </div>
     );

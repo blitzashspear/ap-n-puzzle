@@ -43,5 +43,3 @@ function App(): JSX.Element {
 }
 
 export default App;
-// TODO (Client)
-// Repurpose demo stuff as singleplayer.

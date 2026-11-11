@@ -27,6 +27,12 @@ h1 {
     right: 10px;
 }
 
+.Settings {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
 .ButtonAP {
     color: black;
     border: 3px solid black;

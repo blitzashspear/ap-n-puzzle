@@ -9,13 +9,6 @@ const SOUND_ILLEGAL_MOVE = `${process.env.PUBLIC_URL}/sounds/IllegalMove.wav`;
 const SOUND_RESET_PUZZLE = `${process.env.PUBLIC_URL}/sounds/ResetPuzzle.wav`;
 const SOUND_PUZZLE_GOAL = `${process.env.PUBLIC_URL}/sounds/PuzzleGoaled.wav`;
 
-//helper function to reduce volume because by jove bfxr sounds are LOUD
-function playSound(src: string) {
-    const audio = new Audio(src);
-    audio.volume = 0.5;
-    void audio.play();
-}
-
 const GRID_TEMPLATES: Record<number, string> = {
     9: "repeat(3, 160px)",
     16: "repeat(4, 120px)",
@@ -71,6 +64,8 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
     const [revealed, setRevealed] = useState<string[]>([]);
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
     const [deathLinkMessage, setDeathLinkMessage] = useState("");
+    const [soundsMuted, setSoundsMuted] = useState(false);
+    const soundsMutedRef = useRef(false);
     const lastDeathLink = useRef(0);
     const puzzleDone = useRef(false);
     const [killResetButton, setKillResetButton] = useState(false);
@@ -151,6 +146,16 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, [puzzle]);
+
+    //helper function to reduce volume because by jove bfxr sounds are LOUD
+    function playSound(src: string) {
+        if (soundsMutedRef.current) {
+            return;
+        }
+        const audio = new Audio(src);
+        audio.volume = 0.5;
+        void audio.play();
+    }
 
     // ah yes the one function where i used actual for loops.
     function checkPuzzle(board: number[][] = puzzle) {
@@ -287,12 +292,23 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                     </div>
                 ))}
             </div>
-            <Button
-                className="ButtonAP"
-                onClick={() => resetPuzzle()}
-                disabled={killResetButton}>
-                RESET PUZZLE
-            </Button>
+            <div className="Settings">
+                <Button
+                    className="ButtonAP"
+                    onClick={() => resetPuzzle()}
+                    disabled={killResetButton}>
+                    RESET PUZZLE
+                </Button>
+                <Button
+                    className="ButtonAP"
+                    onClick={() => {
+                        const muted = !soundsMutedRef.current;
+                        soundsMutedRef.current = muted;
+                        setSoundsMuted(muted);
+                    }}>
+                    {soundsMuted ? "UNMUTE" : "MUTE"}
+                </Button>
+            </div>
         </div>
     );
 }
