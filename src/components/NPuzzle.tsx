@@ -185,12 +185,15 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         }
         const newPuzzle = puzzle.map(row => [...row]);
         const theTime = Date.now();
-        const targetDirections = [
-            { row: row - 1, col },
-            { row: row + 1, col },
-            { row, col: col - 1 },
-            { row, col: col + 1 }
-        ];
+        const targetDirections = [];
+        for (let i = 0; i < size; i++) {
+            targetDirections.push(
+                { row: row - i, col },
+                { row: row + i, col },
+                { row, col: col - i },
+                { row, col: col + i }
+            );
+        }
         const target = targetDirections.find(
             ({ row: targetRow, col: targetCol }) =>
                 newPuzzle[targetRow]?.[targetCol] === 0
@@ -198,7 +201,18 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
 
         // Found 0, otherwise nuke entire multiworld.
         if (target) {
-            newPuzzle[target.row][target.col] = newPuzzle[row][col];
+            let currRow = target.row;
+            let currCol = target.col;
+
+            while (currRow !== row || currCol !== col) {
+                const nextRow = currRow + Math.sign(row - currRow);
+                const nextCol = currCol + Math.sign(col - currCol);
+
+                newPuzzle[currRow][currCol] = newPuzzle[nextRow][nextCol];
+
+                currRow = nextRow;
+                currCol = nextCol;
+            }
             newPuzzle[row][col] = 0;
             playSound(SOUND_MOVE_SQUARE);
         } else if (slotData.deathLink && theTime - lastDeathLink.current >= COOLDOWN_DEATH_LINK) {
