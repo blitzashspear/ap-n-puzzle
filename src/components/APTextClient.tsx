@@ -86,6 +86,7 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
                     shouldAutoScroll.current =
                         container.scrollHeight - container.scrollTop - container.clientHeight <= 1;
                 }}
+                style={{ display: hideMessages ? "none" : "block" }}
             >
                 {errText}
                 {messages.map((message, index) => {

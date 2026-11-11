@@ -31,6 +31,7 @@ export function DemoText(): JSX.Element {
                     shouldAutoScroll.current =
                         container.scrollHeight - container.scrollTop - container.clientHeight <= 1;
                 }}
+                style={{ display: hideMessages ? "none" : "block" }}
             >
                 {messages.map((message, index) => {
                     return <div key={index} className="APMessage">
