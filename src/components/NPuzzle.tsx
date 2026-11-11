@@ -65,7 +65,6 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
     const [deathLinkMessage, setDeathLinkMessage] = useState("");
     const [soundsMuted, setSoundsMuted] = useState(false);
-    const soundsMutedRef = useRef(false);
     const lastDeathLink = useRef(0);
     const puzzleDone = useRef(false);
     const [killResetButton, setKillResetButton] = useState(false);
@@ -149,7 +148,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
 
     //helper function to reduce volume because by jove bfxr sounds are LOUD
     function playSound(src: string) {
-        if (soundsMutedRef.current) {
+        if (soundsMuted) {
             return;
         }
         const audio = new Audio(src);
@@ -302,9 +301,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                 <Button
                     className="ButtonAP"
                     onClick={() => {
-                        const muted = !soundsMutedRef.current;
-                        soundsMutedRef.current = muted;
-                        setSoundsMuted(muted);
+                        setSoundsMuted(!soundsMuted);
                     }}>
                     {soundsMuted ? "UNMUTE" : "MUTE"}
                 </Button>
