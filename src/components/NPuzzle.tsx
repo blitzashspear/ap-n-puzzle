@@ -121,7 +121,8 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                 clearTimeout(deathLinkMessageTimeout);
             }
         };
-    }, [client]);
+    }, [client, soundsMuted]);
+    //including soundsMuted in a dependency array because when I dont it doesnt mute the next sound.
 
     useEffect(() => {
         checkPuzzle(puzzle);
@@ -144,7 +145,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [puzzle]);
+    }, [puzzle, soundsMuted]);
 
     //helper function to reduce volume because by jove bfxr sounds are LOUD
     function playSound(src: string) {
@@ -301,7 +302,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                 <Button
                     className="ButtonAP"
                     onClick={() => {
-                        setSoundsMuted(!soundsMuted);
+                        setSoundsMuted(muted => !muted);
                     }}>
                     {soundsMuted ? "UNMUTE" : "MUTE"}
                 </Button>

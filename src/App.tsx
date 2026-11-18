@@ -43,3 +43,7 @@ function App(): JSX.Element {
 }
 
 export default App;
+
+// TODO 
+// add start button
+// add sound if item was received by another player.
