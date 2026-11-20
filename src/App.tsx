@@ -43,7 +43,3 @@ function App(): JSX.Element {
 }
 
 export default App;
-
-// TODO 
-// add start button
-// add toggle for the chat to view only items related to you.
