@@ -78,7 +78,7 @@ h1 {
     text-align: left;
     display: block;
     width: 400px;
-    max-height: 825px;
+    max-height: calc(100vh - 60px);
     overflow-y: auto;
     overflow-x: hidden;
     padding-left: 6px;

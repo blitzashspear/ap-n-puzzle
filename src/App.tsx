@@ -46,4 +46,4 @@ export default App;
 
 // TODO 
 // add start button
-// add sound if item was received by another player.
+// add toggle for the chat to view only items related to you.

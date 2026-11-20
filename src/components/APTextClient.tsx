@@ -10,6 +10,9 @@ type ChatMessage = {
     nodes: MessageNode[];
 };
 
+const MAX_MESSAGES = 1000;
+const MESSAGE_FLUSH_INTERVAL_MS = 100;
+
 export function APTextClient({ client }: APTextClientProps): JSX.Element {
     if (!client.authenticated) {
         return <></>;
@@ -24,6 +27,7 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
     const [hideMessages, setHideMessages] = useState(false);
     const messagesContainer = useRef<HTMLDivElement>(null);
     const shouldAutoScroll = useRef(true);
+    const pendingMessages = useRef<ChatMessage[]>([]);
 
     useEffect(() => {
         const container = messagesContainer.current;
@@ -33,15 +37,35 @@ function TextClient({ client }: APTextClientProps): JSX.Element {
     }, [messages]);
 
     useEffect(() => {
+        let flushTimeout: ReturnType<typeof setTimeout> | undefined;
+
+        const flushMessages = () => {
+            flushTimeout = undefined;
+            const newMessages = pendingMessages.current;
+            pendingMessages.current = [];
+
+            if (newMessages.length > 0) {
+                setMessages(prevMessages =>
+                    [...prevMessages, ...newMessages.slice(-MAX_MESSAGES)].slice(-MAX_MESSAGES)
+                );
+                setErrText("");
+            }
+        };
+
         const handleMessage = (_content: string, nodes: MessageNode[]) => {
-            setMessages(prevMessages => [...prevMessages, { nodes }]);
-            setErrText("");
+            pendingMessages.current.push({ nodes });
+            if (flushTimeout === undefined) {
+                flushTimeout = setTimeout(flushMessages, MESSAGE_FLUSH_INTERVAL_MS);
+            }
         };
 
         client.messages.on("message", handleMessage);
 
         return () => {
             client.messages.off("message", handleMessage);
+            if (flushTimeout !== undefined) {
+                clearTimeout(flushTimeout);
+            }
         };
     }, [client]);
 
