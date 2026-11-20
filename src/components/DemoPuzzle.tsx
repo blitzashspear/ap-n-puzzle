@@ -149,11 +149,6 @@ export function DemoPuzzle(): JSX.Element {
 
     return (
         <div className="NPuzzleContainer">
-            <Button
-                className="ButtonAP"
-            >
-                START
-            </Button>
             <div
                 className="PuzzleUI"
                 style={{
