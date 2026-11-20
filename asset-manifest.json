@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/ap-n-puzzle/static/css/main.bfdc65fc.css",
-    "main.js": "/ap-n-puzzle/static/js/main.c9fe80a4.js",
+    "main.css": "/ap-n-puzzle/static/css/main.52d431d4.css",
+    "main.js": "/ap-n-puzzle/static/js/main.9aeba53f.js",
     "static/js/453.b763eda6.chunk.js": "/ap-n-puzzle/static/js/453.b763eda6.chunk.js",
     "static/media/APIcon.png": "/ap-n-puzzle/static/media/APIcon.486aa73034d8a5160b72.png",
     "index.html": "/ap-n-puzzle/index.html",
-    "main.bfdc65fc.css.map": "/ap-n-puzzle/static/css/main.bfdc65fc.css.map",
-    "main.c9fe80a4.js.map": "/ap-n-puzzle/static/js/main.c9fe80a4.js.map",
+    "main.52d431d4.css.map": "/ap-n-puzzle/static/css/main.52d431d4.css.map",
+    "main.9aeba53f.js.map": "/ap-n-puzzle/static/js/main.9aeba53f.js.map",
     "453.b763eda6.chunk.js.map": "/ap-n-puzzle/static/js/453.b763eda6.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.bfdc65fc.css",
-    "static/js/main.c9fe80a4.js"
+    "static/css/main.52d431d4.css",
+    "static/js/main.9aeba53f.js"
   ]
 }
