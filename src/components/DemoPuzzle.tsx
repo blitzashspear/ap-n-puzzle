@@ -160,6 +160,11 @@ export function DemoPuzzle(): JSX.Element {
                     <div
                         key={`${rowIndex}-${colIndex}`}
                         className={`${value === 0 ? "PuzzleBlank" : ""} Size-${size}`}
+                        style={{
+                            backgroundColor: value !== 0 && value === initPuzzle[rowIndex][colIndex]
+                                ? "rgb(0, 60, 0)"
+                                : undefined
+                        }}
                         onClick={() => movePuzzle(rowIndex, colIndex)}
                     >
                         {cellContent(value)}

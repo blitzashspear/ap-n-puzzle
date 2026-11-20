@@ -286,7 +286,12 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                         key={`${rowIndex}-${colIndex}`}
                         className={`${value === 0 ? "PuzzleBlank" : ""} Size-${size}`}
                         onClick={() => movePuzzle(rowIndex, colIndex)}
-                        style={{ color: checkedLocations.includes(value) ? "yellowgreen" : undefined }}
+                        style={{
+                            color: checkedLocations.includes(value) ? "yellowgreen" : undefined,
+                            backgroundColor: value !== 0 && value === goalPuzzle[rowIndex][colIndex]
+                                ? "darkgreen"
+                                : undefined
+                        }}
                     >
                         {cellContent(value)}
                     </div>
