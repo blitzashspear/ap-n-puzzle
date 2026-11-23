@@ -80,13 +80,16 @@ export function DemoPuzzle(): JSX.Element {
             }
             newPuzzle[row][col] = 0;
             playSound(MOVE_SQUARE_SOUND);
+            setPuzzle(newPuzzle);
         } else {
             playSound(ILLEGAL_MOVE_SOUND);
         }
-        setPuzzle(newPuzzle);
     }
 
     function handleKeyDown(event: KeyboardEvent) {
+        if (event.target instanceof HTMLInputElement && event.target.closest(".APTextClient")) {
+            return;
+        }
         const emptyRow = puzzle.findIndex(row => row.includes(0));
         const emptyCol = puzzle[emptyRow].indexOf(0);
         switch (event.key) {

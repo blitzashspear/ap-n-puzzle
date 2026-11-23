@@ -38,17 +38,18 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
     const [storedPuzzle, setStoredPuzzle] = useState<number[][] | null>(null);
 
     useEffect(() => {
+        setStoredPuzzle(null);
         if (!client.authenticated || !slotData) {
-            setStoredPuzzle(null);
             return;
         }
-        setStoredPuzzle(null);
-        client.storage.fetch<number[][]>("puzzle").then(storedPuzzle => {
-            console.log(storedPuzzle);
-            setStoredPuzzle(storedPuzzle ?? slotData.puzzle);
-        }).catch(() => {
-            setStoredPuzzle(slotData.puzzle);
-        });
+        client.storage.fetch<number[][]>("puzzle")
+            .then(storedPuzzle => {
+                console.log(storedPuzzle);
+                setStoredPuzzle(storedPuzzle ?? slotData.puzzle);
+            })
+            .catch(() => {
+                setStoredPuzzle(slotData.puzzle);
+            });
     }, [client, slotData]);
 
     if (!client.authenticated || !slotData || !storedPuzzle) {
@@ -66,8 +67,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
     const [deathLinkMessage, setDeathLinkMessage] = useState("");
     const [soundsMuted, setSoundsMuted] = useState(false);
     const lastDeathLink = useRef(0);
-    const puzzleDone = useRef(false);
-    const [killResetButton, setKillResetButton] = useState(false);
+    const [puzzleComplete, setPuzzleComplete] = useState(false);
     const goalPuzzle = Array.from({ length: dimSize }, (_, row) =>
         Array.from({ length: dimSize }, (_, col) => {
             const value = row * dimSize + col + 1;
@@ -122,7 +122,6 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
             }
         };
     }, [client, soundsMuted]);
-    //including soundsMuted in a dependency array because when I dont it doesnt mute the next sound.
 
     useEffect(() => {
         checkPuzzle(puzzle);
@@ -145,7 +144,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [puzzle, soundsMuted]);
+    }, [puzzle, puzzleComplete, soundsMuted]);
 
     //helper function to reduce volume because by jove bfxr sounds are LOUD
     function playSound(src: string) {
@@ -174,16 +173,15 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         for (let i = 1; i <= totalSolved; i++) {
             client.check(1000 + i);
         }
-        if (totalSolved === size - 1 && !puzzleDone.current) {
+        if (totalSolved === size - 1 && !puzzleComplete) {
             playSound(SOUND_PUZZLE_GOAL);
-            puzzleDone.current = true;
-            setKillResetButton(true);
+            setPuzzleComplete(true);
             client.goal();
         }
     }
 
     function movePuzzle(row: number, col: number) {
-        if (puzzle[row][col] == 0 || puzzleDone.current) {
+        if (puzzle[row][col] === 0 || puzzleComplete) {
             // Bro you clicked the blank tile.
             // okay or the puzzle literally doesnt need to be moved anymore, smartass.
             return;
@@ -220,16 +218,20 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
             }
             newPuzzle[row][col] = 0;
             playSound(SOUND_MOVE_SQUARE);
+            setPuzzle(newPuzzle);
         } else if (slotData.deathLink && theTime - lastDeathLink.current >= COOLDOWN_DEATH_LINK) {
             lastDeathLink.current = theTime;
             client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
             playSound(SOUND_ILLEGAL_MOVE);
         }
-        setPuzzle(newPuzzle);
     }
 
     // Moving a cell with arrow keys means the cell is going into the blank space.
     function handleKeyDown(event: KeyboardEvent) {
+        if (event.target instanceof HTMLInputElement && event.target.closest(".APTextClient")) {
+            return;
+        }
+
         const emptyRow = puzzle.findIndex(row => row.includes(0));
         const emptyCol = puzzle[emptyRow].indexOf(0);
         switch (event.key) {
@@ -288,7 +290,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                         onClick={() => movePuzzle(rowIndex, colIndex)}
                         style={{
                             color: checkedLocations.includes(value) ? "yellowgreen" : undefined,
-                            backgroundColor: value !== 0 && value === goalPuzzle[rowIndex][colIndex]
+                            backgroundColor: checkedLocations.includes(value) && value !== 0 && value === goalPuzzle[rowIndex][colIndex]
                                 ? "rgb(0, 60, 0)"
                                 : undefined
                         }}
@@ -301,7 +303,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                 <Button
                     className="ButtonAP"
                     onClick={() => resetPuzzle()}
-                    disabled={killResetButton}>
+                    disabled={puzzleComplete}>
                     RESET PUZZLE
                 </Button>
                 <Button
