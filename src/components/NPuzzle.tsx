@@ -290,7 +290,10 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
                         onClick={() => movePuzzle(rowIndex, colIndex)}
                         style={{
                             color: checkedLocations.includes(value) ? "yellowgreen" : undefined,
-                            backgroundColor: checkedLocations.includes(value) && value !== 0 && value === goalPuzzle[rowIndex][colIndex]
+                            backgroundColor: checkedLocations.includes(value) &&
+                                revealed.includes(value.toString()) &&
+                                value !== 0 &&
+                                value === goalPuzzle[rowIndex][colIndex]
                                 ? "rgb(0, 60, 0)"
                                 : undefined
                         }}
