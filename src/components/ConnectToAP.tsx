@@ -29,8 +29,6 @@ export function ConnectToAP({ client, setSlotData }: ConnectToAPProps): JSX.Elem
             void new Audio(SOUND_CONNECT).play();
             setSlotData(await client.login<NPuzzleSlotData>(host + ":" + port, player, "n-Puzzle", { password }));
             setConnectMessage("");
-            // I will kill 7 thousand multiworlds by sending my Starting Number check before the countdown.
-            client.check(999);
         } catch (error) {
             setSlotData(null);
             setConnectMessage("Failed to connect to Archipelago.");

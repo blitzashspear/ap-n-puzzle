@@ -61,6 +61,7 @@ export function NPuzzle({ client, slotData }: NPuzzleProps): JSX.Element {
 function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JSX.Element {
     const size = slotData.size;
     const dimSize = Math.sqrt(size);
+    const gridTemplate = GRID_TEMPLATES[size];
     const [puzzle, setPuzzle] = useState<number[][]>(loadedPuzzle.map(row => [...row]));
     const [revealed, setRevealed] = useState<string[]>([]);
     const [checkedLocations, setCheckedLocations] = useState<number[]>(client.room.checkedLocations);
@@ -68,6 +69,7 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
     const [soundsMuted, setSoundsMuted] = useState(false);
     const lastDeathLink = useRef(0);
     const [puzzleComplete, setPuzzleComplete] = useState(false);
+    const [playerStarted, setPlayerStarted] = useState(false);
     const goalPuzzle = Array.from({ length: dimSize }, (_, row) =>
         Array.from({ length: dimSize }, (_, col) => {
             const value = row * dimSize + col + 1;
@@ -85,7 +87,11 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
             setRevealed(items);
         };
         const handleLocationsChecked = () => {
-            setCheckedLocations(client.room.checkedLocations);
+            const locations = client.room.checkedLocations;
+            setCheckedLocations(locations);
+            if (locations.includes(999)) {
+                setPlayerStarted(true);
+            }
         };
 
         handleItemsReceived();
@@ -219,9 +225,11 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
             newPuzzle[row][col] = 0;
             playSound(SOUND_MOVE_SQUARE);
             setPuzzle(newPuzzle);
-        } else if (slotData.deathLink && theTime - lastDeathLink.current >= COOLDOWN_DEATH_LINK) {
-            lastDeathLink.current = theTime;
-            client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
+        } else {
+            if (slotData.deathLink && theTime - lastDeathLink.current >= COOLDOWN_DEATH_LINK) {
+                lastDeathLink.current = theTime;
+                client.deathLink.sendDeathLink(client.name, `${client.name} made an invalid move.`);
+            }
             playSound(SOUND_ILLEGAL_MOVE);
         }
     }
@@ -273,34 +281,50 @@ function NPuzzleBoard({ client, slotData, loadedPuzzle }: NPuzzleBoardProps): JS
         playSound(SOUND_RESET_PUZZLE);
     }
 
+    if (!playerStarted) {
+        return <div className="NPuzzleContainer">
+            <Button
+                className="ButtonAP"
+                onClick={() => {
+                    client.check(999);
+                    setPlayerStarted(true);
+                }}
+            >
+                START
+            </Button>
+        </div>;
+    }
+
     return (
         <div className="NPuzzleContainer">
             {deathLinkMessage}
             <div
                 className="PuzzleUI"
                 style={{
-                    gridTemplateColumns: GRID_TEMPLATES[size],
-                    gridTemplateRows: GRID_TEMPLATES[size]
+                    gridTemplateColumns: gridTemplate,
+                    gridTemplateRows: gridTemplate
                 }}
             >
-                {puzzle.map((row, rowIndex) => row.map((value, colIndex) =>
-                    <div
-                        key={`${rowIndex}-${colIndex}`}
-                        className={`${value === 0 ? "PuzzleBlank" : ""} Size-${size}`}
-                        onClick={() => movePuzzle(rowIndex, colIndex)}
-                        style={{
-                            color: checkedLocations.includes(value) ? "yellowgreen" : undefined,
-                            backgroundColor: checkedLocations.includes(value) &&
-                                revealed.includes(value.toString()) &&
-                                value !== 0 &&
-                                value === goalPuzzle[rowIndex][colIndex]
-                                ? "rgb(0, 60, 0)"
-                                : undefined
-                        }}
-                    >
-                        {cellContent(value)}
-                    </div>
-                ))}
+                {puzzle.map((row, rowIndex) => row.map((value, colIndex) => {
+                    const isChecked = checkedLocations.includes(value);
+                    const isRevealed = revealed.includes(value.toString());
+                    const isSolved = isChecked && isRevealed &&
+                        value !== 0 && value === goalPuzzle[rowIndex][colIndex];
+
+                    return (
+                        <div
+                            key={`${rowIndex}-${colIndex}`}
+                            className={`${value === 0 ? "PuzzleBlank" : ""} Size-${size}`}
+                            onClick={() => movePuzzle(rowIndex, colIndex)}
+                            style={{
+                                color: isChecked ? "rgb(0, 200, 50)" : undefined,
+                                backgroundColor: isSolved ? "rgb(0, 75, 0)" : undefined
+                            }}
+                        >
+                            {cellContent(value)}
+                        </div>
+                    );
+                }))}
             </div>
             <div className="Settings">
                 <Button

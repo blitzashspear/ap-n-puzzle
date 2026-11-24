@@ -40,6 +40,7 @@ export function DemoPuzzle(): JSX.Element {
 
     const initPuzzle = generatePuzzle(size);
     const [puzzle, setPuzzle] = useState<number[][]>(initPuzzle);
+    const [correctColor, setCorrectColor] = useState(false);
 
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown);
@@ -164,8 +165,11 @@ export function DemoPuzzle(): JSX.Element {
                         key={`${rowIndex}-${colIndex}`}
                         className={`${value === 0 ? "PuzzleBlank" : ""} Size-${size}`}
                         style={{
+                            color: correctColor
+                                ? "rgb(0, 200, 50)"
+                                : undefined,
                             backgroundColor: value !== 0 && value === initPuzzle[rowIndex][colIndex]
-                                ? "rgb(0, 60, 0)"
+                                ? "rgb(0, 75, 0)"
                                 : undefined
                         }}
                         onClick={() => movePuzzle(rowIndex, colIndex)}
@@ -213,6 +217,9 @@ export function DemoPuzzle(): JSX.Element {
                     </Button>
                     <Button className="ButtonAP" onClick={() => setShowLogo(!showLogo)}>
                         {showLogo ? "NUMBERS" : "LOGO"}
+                    </Button>
+                    <Button className="ButtonAP" onClick={() => setCorrectColor(color => !color)}>
+                        {correctColor ? "NORMAL TEXT" : "GREEN TEXT"}
                     </Button>
                 </div>
                 <div className="Settings">
